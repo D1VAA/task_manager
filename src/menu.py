@@ -2,40 +2,54 @@ from utils.colors import Colors
 from database.crud_database import create_freight, query_freight
 from pathlib import Path
 import send2trash
+from todo import Todo
 
 title: str = '''
 TITLE EXAMPLE
 '''
 
 def get_input(msg):
+    print()
     obj = input(f'{Colors.PURPLE}[-]{Colors.RESET} {msg}').lower().rstrip()
     return obj 
 
-class Menu:
+class Menu(Todo):
     def __init__(self):
-        self._initial_panel()
+        self._menu()
     
-    def _initial_panel(self):
+    def _show_menu_options(self):
         data = f'''
         \r-------------------------------------------------------------
-        \r\t{Colors.RED}[1] {Colors.YELLOW}Add a new freight to database from file.
-        \r\t{Colors.RED}[2] {Colors.YELLOW}Query an existing freight at database.
-          {Colors.RESET}
+        \r\t{Colors.RED}[1] {Colors.YELLOW}Adicionar um frete a base de dados.
+        \r\t{Colors.RED}[2] {Colors.YELLOW}Consultar um frete na base de dados.
+        \r\t{Colors.RED}[4] {Colors.YELLOW}Gerenciador de tasks.
+        \n\t{Colors.RED}[!]{Colors.PURPLE} CTRL + C{Colors.RESET} para sair!
+        {Colors.RESET}
         '''
         print(data)
-        opts = {1: self._add_freight, 2: self._query_freight}
+    
+    def _menu(self):
+        """
+        Initial panel.
+        Show the available option to the user.
+        """
+        opts = {1: self._add_freight, 2: self._query_freight, 4: super().__init__}
         try:
             while True:
-                opt = int(input(f'Choose an option{Colors.BLUE} >{Colors.RESET} '))
-                print()
+                try:
+                    self._show_menu_options()
+                    opt = int(input(f'Choose an option{Colors.BLUE} >{Colors.RESET} '))
+                    print()
 
-                # if is a invalid option
-                if opt not in opts.keys():
-                    print(f"{Colors.RED}[!]{Colors.RESET} Option not Allowed!\n")
+                    # if is a invalid option
+                    if opt not in opts.keys():
+                        print(f"{Colors.RED}[!]{Colors.RESET} Option not Allowed!\n")
 
-                # if is a valid option, then execute the method
-                else:
-                    opts[opt]()
+                    # if is a valid option, then execute the method
+                    else:
+                        opts[opt]()
+                except KeyboardInterrupt:
+                    print("\n\n[+] Leaving...")
                     break
 
         except Exception as e:
@@ -43,13 +57,14 @@ class Menu:
         
     def _add_freight(self):
         from gdrive_handler import create_gdrive_file
-        file_path = input(f'{Colors.PURPLE}[+]{Colors.RESET} Nome do arquivo (.xlsx)> ')
+        file_path = get_input('Nome do Arquivo (.xlsx or .xls)> ')
         if '.xlsx' not in file_path:
             new_file_path = file_path + '.xlsx'
         file = Path(new_file_path)
 
         try:
             file = file.resolve(strict=True)
+
         except FileNotFoundError:
             file = Path(file_path+'.xls')
             file = file.resolve(strict=True)
@@ -63,8 +78,10 @@ class Menu:
             'client': get_input('Nome do cliente: '),
             'link': link
         }
-        msg = create_freight(**infos)
+
+        create_freight(**infos)
         send2trash.send2trash(str(file))
+
         print(f'{Colors.GREEN}\n[+]{Colors.RESET} Created!\n')
         print(f'{Colors.BLUE}[-]{Colors.RESET} Link to access:\n', link)
         resp = input('Exit? [y/N]').lower()
@@ -80,8 +97,10 @@ class Menu:
             'client': get_input('Nome do cliente: ')
             } 
         msg = query_freight(**infos) 
-        print(f'{Colors.BLUE}[+] {Colors.RESET}Link to access:\n')
-        for x in msg:
-            print(x)
+        for cont, item in enumerate(msg):
+            for rota, link in item.items():
+                print(f'\n{"-"*10} {Colors.RED}{cont+1}º{Colors.RESET} {"-"*10} ', end='\n')
+                print(f'{Colors.YELLOW}{rota.title()}{Colors.RESET}',end='\n\n')
+                print(f'{Colors.BLUE}[+]{Colors.RESET} {link}', end='\n\n')
 
 Menu()

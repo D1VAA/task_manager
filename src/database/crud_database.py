@@ -10,10 +10,17 @@ load_dotenv(f'{os.getcwd()}/src/database/.env')
 DATABASE_URL = os.getenv('DATABASE_URL')
 if DATABASE_URL is None:
     raise ValueError('DATABASE_URL cannot be None.')
-else:
-    engine = create_engine(os.getenv('DATABASE_URL'))  # type: ignore
 
-LocalSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+try:
+    engine = create_engine(DATABASE_URL)  # type: ignore
+
+except Exception as e:
+    raise ValueError(f'Failed to create engine: {e}')
+
+try:
+    LocalSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+except Exception as e:
+    raise ValueError(f'Failed to create sessionmaker: {e}')
 
 @contextmanager
 def get_db():
