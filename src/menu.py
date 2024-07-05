@@ -1,5 +1,5 @@
 from utils.colors import Colors
-from database.crud_database import create_freight, query_freight
+from database.crud_database import create_freight, query_freight, get_unique_values
 from pathlib import Path
 import send2trash
 from todo import Todo
@@ -20,20 +20,13 @@ class Menu(Todo):
     def _show_menu_options(self):
         data = f'''
         \r-------------------------------------------------------------
-        \r\t{Colors.RED}[1] {Colors.YELLOW}Adicionar um frete a base de dados.
-        \r\t{Colors.RED}[2] {Colors.YELLOW}Consultar um frete na base de dados.
-        \r\t{Colors.RED}[4] {Colors.YELLOW}Gerenciador de tasks.
-        \n\t{Colors.RED}[!]{Colors.PURPLE} CTRL + C{Colors.RESET} para sair!
-        {Colors.RESET}
+        \r\t{Colors.RED}[1] {Colors.YELLOW}Adicionar um novo frete a base de dados.
+        \r\t{Colors.RED}[2] {Colors.YELLOW}Consultar um frete da base.
+        \r\t{Colors.RED}[3] {Colors.YELLOW}Mostrar as opções.
+          {Colors.RESET}
         '''
         print(data)
-    
-    def _menu(self):
-        """
-        Initial panel.
-        Show the available option to the user.
-        """
-        opts = {1: self._add_freight, 2: self._query_freight, 4: super().__init__}
+        opts = {1: self._add_freight, 2: self._query_freight, 3: self.show_options, 4: super().__init__}
         try:
             while True:
                 try:
@@ -95,12 +88,26 @@ class Menu(Todo):
             'origem': get_input('Origem: '),
             'destino': get_input('Destino: '),
             'client': get_input('Nome do cliente: ')
-            } 
+        } 
         msg = query_freight(**infos) 
         for cont, item in enumerate(msg):
             for rota, link in item.items():
                 print(f'\n{"-"*10} {Colors.RED}{cont+1}º{Colors.RESET} {"-"*10} ', end='\n')
                 print(f'{Colors.YELLOW}{rota.title()}{Colors.RESET}',end='\n\n')
                 print(f'{Colors.BLUE}[+]{Colors.RESET} {link}', end='\n\n')
+
+    def show_options(self):
+        or_col = get_unique_values("origem")
+        dest_col = get_unique_values("destino")
+        client_col = get_unique_values("client")
+        strings = or_col + dest_col + client_col
+        len_f = len(max(strings, key=len))
+        format_string = f'|{{:^{len_f}}}|{{:^{len_f}}}|{{:^{len_f}}}|'
+        print(format_string.format("Origem", "Destino", "Cliente"))
+        print(format_string.format("", "", ""))
+        for x,y,z in zip(or_col, dest_col, client_col):
+            print(format_string.format(x.title(), y.title(), z.title()))
+
+Menu()
 
 Menu()

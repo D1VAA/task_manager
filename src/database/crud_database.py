@@ -78,3 +78,9 @@ def delete_freight(freight_id):
             except:
                 print("[!] An error occurred!")
                 db.rollback()
+
+def get_unique_values(column_name):
+    with get_db() as db:
+        column = getattr(Freight, column_name)
+        distinct_values = db.query(column).distinct().all()
+        return [value[0] for value in distinct_values]
