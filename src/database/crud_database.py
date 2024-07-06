@@ -70,7 +70,7 @@ def query_freight(origem: str, destino: str, client: str):
 def delete_freight(freight_id):
     with get_db() as db:
         freight = db.get(Freight, freight_id)
-        if freight_id is not None:
+        if freight is not None:
             try:
                 db.delete(freight)
                 db.commit()

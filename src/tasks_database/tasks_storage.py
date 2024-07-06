@@ -16,7 +16,7 @@ class Status(Enum):
     DONE = 'Completed'
 
 @dataclass
-class Task:
+class TaskObj:
     """
     Task structure.
     """
@@ -49,22 +49,26 @@ class HandleTasks:
     """
     Class to manage tasks.
     """
-    id_counter = 0
-    _tasks: Dict[int, Task] = {}
+    _tasks: Dict[int, TaskObj] = {}
     def __init__(self):
-        #self._tasks: Dict[int, Task] = {}  # Dictionary to store all Task instances with unique IDs.
-        ...
+        self.id_counter = 0
+        if self.tasks != {}:
+            self.id_counter = max(self.tasks.keys())
+        #self._tasks: Dict[int, TaskObj] = {}  # Dictionary to store all Task instances with unique IDs.
 
     @property
     def tasks(self) -> Dict:
         """Get the dictionary of tasks."""
         return self._tasks
+
+    @tasks.setter
+    def tasks(self, value):
+        self._tasks = value
     
-    @classmethod
-    def __next_id(cls) -> int:
+    def __next_id(self) -> int:
         """Generate the next unique ID."""
-        cls.id_counter += 1
-        next_id = cls.id_counter
+        self.id_counter += 1
+        next_id = self.id_counter
         return next_id
     
     def new_task(self, name: str, description: Optional[str]) -> None:
@@ -72,7 +76,10 @@ class HandleTasks:
         Create a new task.
         """
         # Update the ID Counter
-        id_counter: int = self.__next_id()
+        self.id_counter: int = self.__next_id()
         creation_date = date.today().strftime('%d-%m-%Y')  # Format: dd-mm-yyyy
 
-        self._tasks[id_counter] = Task(name, description, creation_date) 
+        self._tasks[self.id_counter] = TaskObj(name, description, creation_date) 
+    
+    def update_status(self, task_id, new_status):
+        self.tasks[int(task_id)].status = new_status

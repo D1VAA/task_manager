@@ -15,7 +15,7 @@ def get_input(msg):
 
 class Menu(Todo):
     def __init__(self):
-        self._menu()
+        self.menu()
     
     def _show_menu_options(self):
         data = f'''
@@ -23,14 +23,17 @@ class Menu(Todo):
         \r\t{Colors.RED}[1] {Colors.YELLOW}Adicionar um novo frete a base de dados.
         \r\t{Colors.RED}[2] {Colors.YELLOW}Consultar um frete da base.
         \r\t{Colors.RED}[3] {Colors.YELLOW}Mostrar as opções.
+        \r\t{Colors.RED}[4] {Colors.YELLOW}Gerenciador de tasks.
           {Colors.RESET}
         '''
         print(data)
+    
+    def menu(self):
         opts = {1: self._add_freight, 2: self._query_freight, 3: self.show_options, 4: super().__init__}
         try:
             while True:
+                self._show_menu_options()
                 try:
-                    self._show_menu_options()
                     opt = int(input(f'Choose an option{Colors.BLUE} >{Colors.RESET} '))
                     print()
 
@@ -104,10 +107,9 @@ class Menu(Todo):
         len_f = len(max(strings, key=len))
         format_string = f'|{{:^{len_f}}}|{{:^{len_f}}}|{{:^{len_f}}}|'
         print(format_string.format("Origem", "Destino", "Cliente"))
+        print(format_string.format("------", "-------", "-------"))
         print(format_string.format("", "", ""))
         for x,y,z in zip(or_col, dest_col, client_col):
             print(format_string.format(x.title(), y.title(), z.title()))
-
-Menu()
 
 Menu()
