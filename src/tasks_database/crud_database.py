@@ -53,15 +53,15 @@ def create_task(name: str,
 
 def delete_task(task_id):
     with get_db() as db:
-        task = db.get(Task, task_id)
-        if task is not None:
-            try:
-                db.delete(task)
-                db.commit()
-                return {'message': f'Task delted succesfully.'}
-            except:
-                print('[!] An error occurred.')
-                db.rollback()
+        if quick_query(Task, {"id":task_id}) is not None:
+            task = db.get(Task, task_id)
+            if task is not None:
+                try:
+                    db.delete(task)
+                    db.commit()
+                    return {'message': f'Task delted succesfully.'}
+                except:
+                    db.rollback()
 
 def update_task(name, description, status, task_id=None):
     with get_db() as db:
@@ -97,5 +97,5 @@ def get_tasks_excluding_status(status):
 def get_task_id(name):
     try:
         return quick_query(Task, {'name':name}).id
-    except Exception as e:
-        print(e)
+    except:
+        pass

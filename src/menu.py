@@ -45,7 +45,7 @@ class Menu(Todo):
                     else:
                         opts[opt]()
                 except KeyboardInterrupt:
-                    print("\n\n[+] Leaving...")
+                    print(f"\n\n{Colors.RED}[+]{Colors.RESET} Leaving...")
                     break
 
         except Exception as e:
