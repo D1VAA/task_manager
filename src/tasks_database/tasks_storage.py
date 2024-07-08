@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 from dataclasses import dataclass
 from enum import Enum
 from datetime import date
@@ -67,7 +67,7 @@ class HandleTasks:
     
     def __next_id(self) -> int:
         """Generate the next unique ID."""
-        self.id_counter += 1
+        self.id_counter = max(self.tasks.keys()) + 1
         next_id = self.id_counter
         return next_id
     
@@ -80,6 +80,25 @@ class HandleTasks:
         creation_date = date.today().strftime('%d-%m-%Y')  # Format: dd-mm-yyyy
 
         self._tasks[self.id_counter] = TaskObj(name, description, creation_date) 
+    
+    def _reorganize_tasks(self):
+        """
+        Reorganize the tasks dictionary to fill gaps in ID sequence.
+        """
+        new_tasks = {}
+        for task_id, task in enumerate(self._tasks.values()):
+            new_tasks[task_id+1] = task # Placeholder for deleted tasks
+        self._tasks = new_tasks
+    
+    def delete_task(self, task_id: Union[str, int]) -> None:
+        del self.tasks[int(task_id)]
+        self._reorganize_tasks()
+
+    def change_name(self, task_id, new_name):
+        self.tasks[int(task_id)].name = new_name
+
+    def change_description(self, task_id, new_desc):
+        self.tasks[int(task_id)].description = new_desc
     
     def update_status(self, task_id, new_status):
         self.tasks[int(task_id)].status = new_status

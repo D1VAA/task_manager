@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, asc
 import os
 from dotenv import load_dotenv
+import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
@@ -63,19 +64,29 @@ def delete_task(task_id):
                 except:
                     db.rollback()
 
-def update_task(name, description, status, task_id=None):
+def update_task(name=None, description=None, status=None, task_id=None):
     with get_db() as db:
+        if name is None and task_id is None:
+            print("[!] A name or a task_id must be informed.")
+
         if task_id is not None:
             task = db.get(Task, task_id)
         else:
             task = db.query(Task).filter_by(name=name).first()
-
         if task is not None:
             try:
-                task.name = name
-                task.description = description
-                task.status = status
+                if (task.name == name and task.description == description and task.status == status):
+                    return None
+                if name is not None:
+                    task.name = name
+                if description is not None:
+                    task.description = description
+                if status is not None :
+                    task.status = status
                 db.commit()
+            except sqlalchemy.exc.IntegrityError as e:
+                print(f'Error updating task: {e}')
+                db.rollback()
             except Exception as e:
                 print(e)
                 db.rollback()
@@ -96,6 +107,6 @@ def get_tasks_excluding_status(status):
 
 def get_task_id(name):
     try:
-        return quick_query(Task, {'name':name}).id
+        return int(quick_query(Task, {'name':name}).id)
     except:
         pass

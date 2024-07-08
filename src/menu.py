@@ -4,10 +4,6 @@ from pathlib import Path
 import send2trash
 from todo import Todo
 
-title: str = '''
-TITLE EXAMPLE
-'''
-
 def get_input(msg):
     print()
     obj = input(f'{Colors.PURPLE}[-]{Colors.RESET} {msg}').lower().rstrip()
@@ -30,27 +26,24 @@ class Menu(Todo):
     
     def menu(self):
         opts = {1: self._add_freight, 2: self._query_freight, 3: self.show_options, 4: super().__init__}
-        try:
-            while True:
-                self._show_menu_options()
-                try:
-                    opt = int(input(f'Choose an option{Colors.BLUE} >{Colors.RESET} '))
-                    print()
+        while True:
+            self._show_menu_options()
+            try:
+                opt = int(input(f'Choose an option{Colors.BLUE} >{Colors.RESET} '))
+                print()
 
-                    # if is a invalid option
-                    if opt not in opts.keys():
-                        print(f"{Colors.RED}[!]{Colors.RESET} Option not Allowed!\n")
+                # if is a invalid option
+                if opt not in opts.keys():
+                    print(f"{Colors.RED}[!]{Colors.RESET} Option not Allowed!\n")
 
-                    # if is a valid option, then execute the method
-                    else:
-                        opts[opt]()
-                except KeyboardInterrupt:
-                    print(f"\n\n{Colors.RED}[+]{Colors.RESET} Leaving...")
-                    break
-
-        except Exception as e:
-            print(e)
-        
+                # if is a valid option, then execute the method
+                else:
+                    opts[opt]()
+            except KeyboardInterrupt:
+                print(f"\n\n{Colors.RED}[+]{Colors.RESET} Leaving...")
+                break
+            except:...
+    
     def _add_freight(self):
         from gdrive_handler import create_gdrive_file
         file_path = get_input('Nome do Arquivo (.xlsx or .xls)> ')
