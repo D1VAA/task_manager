@@ -51,13 +51,13 @@ def query_freight(origem: str, destino: str, client: str):
     with get_db() as db:
         query = db.query(Freight)
 
-        # Adiciona filtros dinamicamente
+   # Filtros por igualdade (mantidos)
         if origem:
-            query = query.filter(Freight.origem == origem)
+            query = query.filter(Freight.origem.contains(origem))
         if destino:
-            query = query.filter(Freight.destino == destino)
+            query = query.filter(Freight.destino.contains(destino))
         if client:
-            query = query.filter(Freight.client == client)
+            query = query.filter(Freight.client.contains(client))
 
         freights = query.all()
         links = []
@@ -65,7 +65,6 @@ def query_freight(origem: str, destino: str, client: str):
             links.append({f'{x.origem} x {x.destino}':x.link})
 
         return links 
-
 
 def delete_freight(freight_id):
     with get_db() as db:

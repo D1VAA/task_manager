@@ -5,9 +5,10 @@ import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
-from .tasks_storage import TaskObj
-from .models import Task
-from typing import Dict, Any, Optional
+from modules.tasks_storage import TaskObj
+from modules.updates_manager import Update
+from .models import Task, Updates
+from typing import Dict, Any, List, Optional
 
 load_dotenv(f'{os.getcwd()}/src/tasks_database/.env')
 DATABASE_URL = os.getenv('TASKS_DATABASE_URL')
@@ -43,14 +44,17 @@ def create_task(name: str,
                 creation_date: str, 
                 status: str):
     with get_db() as db:
-        if quick_query(Task, {'name':name}) is not None:
+        if quick_query(Task, {'name':name}) is not None or quick_query(Task, {'description': description}) is not None:
             raise ValueError('Task already exists.')
-        new_freight = Task(name=name, 
-                           description=description, creation_date=creation_date, 
-                           status=status)
-        db.add(new_freight)
-        db.commit()
-        return {'message': f'Task created succesfully.'}
+        try:
+            new_freight = Task(name=name, 
+                            description=description, creation_date=creation_date, 
+                            status=status)
+            db.add(new_freight)
+            db.commit()
+            return {'message': f'Task created succesfully.'}
+        except Exception as e: print(e)
+            
 
 def delete_task(task_id):
     with get_db() as db:
@@ -60,8 +64,8 @@ def delete_task(task_id):
                 try:
                     db.delete(task)
                     db.commit()
-                    return {'message': f'Task delted succesfully.'}
-                except:
+                except Exception as e:
+                    print(f"Error occurred while deleting the task: {e}")
                     db.rollback()
 
 def update_task(name=None, description=None, status=None, task_id=None):
@@ -91,7 +95,7 @@ def update_task(name=None, description=None, status=None, task_id=None):
                 print(e)
                 db.rollback()
         else:
-            print(f"[!] Task with {task_id} not found.")
+            raise ValueError(f"[!] Task with {task_id} not found.")
 
 def get_tasks_excluding_status(status):
     with get_db() as db:
@@ -101,12 +105,110 @@ def get_tasks_excluding_status(status):
             task_dict[cont+1] = TaskObj(task.name, 
                                  task.description, 
                                  task.creation_date,
+                                 task.id,
                                  task.status)
-        return task_dict
+        task_dict_copy = task_dict.copy()
+        return task_dict_copy
 
 
-def get_task_id(name):
+def get_task_id(name, description=None):
     try:
+        if description is not None:
+            return int(quick_query(Task, {'name':name, 'description':description}).id)
         return int(quick_query(Task, {'name':name}).id)
     except:
         pass
+
+def get_update_id(description: str) -> int:
+    try:
+        return int(quick_query(Task, {'description':description}).id)
+    except:
+        pass
+
+def create_update(task_id: int, description: str, creation_date: str):
+    with get_db() as db:
+        try:
+            if quick_query(Updates, {"task_id":task_id,"description":description}) is not None:
+                raise ValueError('Update already exists.')
+            new_update = Updates(task_id=task_id, 
+                                 description=description, creation_date=creation_date)
+            task_to_update = db.query(Task).filter(Task.id == task_id).first()
+            task_to_update.updates.append(new_update)
+            db.commit()
+
+        except Exception as e:
+            print(f"An error occurred while creating a new update: {e}")
+            db.rollback()
+
+def delete_update(update_id: int) -> None:
+    with get_db() as db:
+        try:
+            update_to_delete = db.query(Updates).filter(Updates.id == update_id).first()
+            if update_to_delete is None:
+                raise ValueError(f"Update with ID: {update_id} not found.")
+            db.delete(update_to_delete)
+            db.commit()
+
+        except Exception as e:
+            print(f"An error occurred while deleting the update: {e}")
+            db.rollback()
+
+def get_updates_by_task(task_id: int) -> Dict[int, Dict[int, Update]]:
+    with get_db() as db:
+        updates = db.query(Updates).filter(Updates.task_id == task_id).order_by(Updates.id.asc()).all()
+        updates_dict = {}
+        if task_id not in updates_dict.keys():
+            updates_dict[task_id] = {}
+        for cont, update in enumerate(updates):
+            updates_dict[task_id][cont+1] = Update(update.description, 
+                                                   update.creation_date,
+                                                   update.id)
+        return updates_dict
+
+def get_all_updates(task_ids: List[int] = None) -> Dict[int, Dict[int, Update]]:
+    with get_db() as db:
+        # Pega todos os updates na database
+        if task_ids is None:
+            updates = db.query(Updates).order_by(Updates.id.asc()).all()
+        else:
+            updates = db.query(Updates).filter(Updates.task_id.in_(task_ids)).order_by(Updates.id.asc()).all()
+
+        updates_dict = {}
+        for update in updates:
+            task_id = update.task_id
+            if task_id not in updates_dict.keys():
+                updates_dict[task_id] = {}
+
+            # Contador para a quantidade de updates de cada task. Se o dicionário de updates para aquela task estiver vazio, ele atribui o valor 1
+            cont = len(updates_dict[task_id].keys())+1
+            updates_dict[task_id][cont] = Update(update.description, 
+                                                   update.creation_date,
+                                                   update.id)
+        updates_dict_copy = updates_dict.copy()
+        return updates_dict_copy
+
+def edit_update(description=None, task_id=None, update_id=None):
+    with get_db() as db:
+        if description is None and update_id is None:
+            print("[!] A name or a update_id must be informed.")
+        if update_id is not None:
+            update = db.get(Updates, update_id)
+        else:
+            update = db.query(Updates).filter_by(description=description).first()
+        if update is not None:
+            try:
+                if (update.description == description and update.task_id == task_id):
+                    return None
+                if description is not None:
+                    update.description = description
+                if task_id is not None :
+                    update.task_id = task_id 
+                db.commit()
+            except sqlalchemy.exc.IntegrityError as e:
+                print(f'Error updating task: {e}')
+                db.rollback()
+            except Exception as e:
+                print(e)
+                db.rollback()
+        else:
+            print(f"[!] Task with {task_id} not found.")

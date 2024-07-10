@@ -23,7 +23,9 @@ class TaskObj:
     name: str
     description: Optional[str]
     _creation_date: str  # Immutabel attribute
+    task_id: int = 0
     _status: Status = "Not Started"
+    updates: int = 0
 
     @property
     def creation_date(self):
@@ -67,9 +69,7 @@ class HandleTasks:
     
     def __next_id(self) -> int:
         """Generate the next unique ID."""
-        self.id_counter = max(self.tasks.keys()) + 1
-        next_id = self.id_counter
-        return next_id
+        return len(self.tasks.keys()) + 1
     
     def new_task(self, name: str, description: Optional[str]) -> None:
         """

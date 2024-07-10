@@ -2,7 +2,7 @@ from utils.colors import Colors
 from database.crud_database import create_freight, query_freight, get_unique_values
 from pathlib import Path
 import send2trash
-from todo import Todo
+from modules.todo import Todo
 
 def get_input(msg):
     print()
@@ -45,7 +45,7 @@ class Menu(Todo):
             except:...
     
     def _add_freight(self):
-        from gdrive_handler import create_gdrive_file
+        from modules.gdrive_handler import create_gdrive_file
         file_path = get_input('Nome do Arquivo (.xlsx or .xls)> ')
         if '.xlsx' not in file_path:
             new_file_path = file_path + '.xlsx'
