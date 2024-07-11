@@ -42,7 +42,8 @@ class Menu(Todo):
             except KeyboardInterrupt:
                 print(f"\n\n{Colors.RED}[+]{Colors.RESET} Leaving...")
                 break
-            except:...
+            except Exception as e:
+                print(e)
     
     def _add_freight(self):
         from modules.gdrive_handler import create_gdrive_file

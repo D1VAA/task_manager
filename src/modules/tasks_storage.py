@@ -1,19 +1,10 @@
 from typing import Dict, Optional, Union
 from dataclasses import dataclass
-from enum import Enum
 from datetime import date
 from datetime import date
 
 class InvalidOperationError(Exception):
     pass
-
-class Status(Enum):
-    """
-    Default status options for tasks. (Kanban)
-    """
-    NOT_STARTED = 'Not Started'
-    IN_PROGRESS = 'In Progress'
-    DONE = 'Completed'
 
 @dataclass
 class TaskObj:
@@ -24,8 +15,7 @@ class TaskObj:
     description: Optional[str]
     _creation_date: str  # Immutabel attribute
     task_id: int = 0
-    _status: Status = "Not Started"
-    updates: int = 0
+    _status:str = "Not Started"
 
     @property
     def creation_date(self):

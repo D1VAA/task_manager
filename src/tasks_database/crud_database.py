@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, asc
+from sqlalchemy import create_engine, asc, delete
 import os
 from dotenv import load_dotenv
 import sqlalchemy
@@ -9,6 +9,7 @@ from modules.tasks_storage import TaskObj
 from modules.updates_manager import Update
 from .models import Task, Updates
 from typing import Dict, Any, List, Optional
+from sqlalchemy.exc import IntegrityError
 
 load_dotenv(f'{os.getcwd()}/src/tasks_database/.env')
 DATABASE_URL = os.getenv('TASKS_DATABASE_URL')
@@ -55,6 +56,12 @@ def create_task(name: str,
             return {'message': f'Task created succesfully.'}
         except Exception as e: print(e)
             
+def delete_all_updates_from_task(task_id):
+    with get_db() as db:
+        #updates_to_delete = db.query(Updates).filter(Updates.task_id == task_id)
+        delete_stmt = delete(Updates).where(Updates.task_id == task_id)
+        db.execute(delete_stmt)
+        db.commit()
 
 def delete_task(task_id):
     with get_db() as db:
@@ -64,9 +71,14 @@ def delete_task(task_id):
                 try:
                     db.delete(task)
                     db.commit()
-                except Exception as e:
-                    print(f"Error occurred while deleting the task: {e}")
+                except IntegrityError:
                     db.rollback()
+                    delete_all_updates_from_task(task_id)
+                    delete_task(task_id)
+
+                except Exception as e:
+                    db.rollback()
+                    print(e)
 
 def update_task(name=None, description=None, status=None, task_id=None):
     with get_db() as db:
@@ -89,13 +101,12 @@ def update_task(name=None, description=None, status=None, task_id=None):
                     task.status = status
                 db.commit()
             except sqlalchemy.exc.IntegrityError as e:
-                print(f'Error updating task: {e}')
                 db.rollback()
-            except Exception as e:
-                print(e)
+                raise sqlalchemy.exc.IntegrityError(f'Error updating task: {e}')
+            except:
                 db.rollback()
         else:
-            raise ValueError(f"[!] Task with {task_id} not found.")
+            raise ValueError(f"[!] Task with ID {task_id} not found.")
 
 def get_tasks_excluding_status(status):
     with get_db() as db:
@@ -116,14 +127,12 @@ def get_task_id(name, description=None):
         if description is not None:
             return int(quick_query(Task, {'name':name, 'description':description}).id)
         return int(quick_query(Task, {'name':name}).id)
-    except:
-        pass
+    except:...
 
 def get_update_id(description: str) -> int:
     try:
         return int(quick_query(Task, {'description':description}).id)
-    except:
-        pass
+    except:...
 
 def create_update(task_id: int, description: str, creation_date: str):
     with get_db() as db:
@@ -136,8 +145,7 @@ def create_update(task_id: int, description: str, creation_date: str):
             task_to_update.updates.append(new_update)
             db.commit()
 
-        except Exception as e:
-            print(f"An error occurred while creating a new update: {e}")
+        except:
             db.rollback()
 
 def delete_update(update_id: int) -> None:
@@ -212,3 +220,4 @@ def edit_update(description=None, task_id=None, update_id=None):
                 db.rollback()
         else:
             print(f"[!] Task with {task_id} not found.")
+            

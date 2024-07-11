@@ -701,3 +701,216 @@
 2024-07-10 17:21:37,563 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
 2024-07-10 17:31:45,416 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
 2024-07-10 17:31:47,279 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:18:59,496 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:19:00,637 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:19:03,267 - logger - INFO - Deletou do banco de dados a task de ID: 71 - NOME: novo nome
+2024-07-10 19:19:03,407 - logger - INFO - Deletou do dicionário a task de nome: novo nome
+2024-07-10 19:19:04,897 - logger - INFO - Deletou do banco de dados a task de ID: 70 - NOME: UM TESTE
+2024-07-10 19:19:05,030 - logger - INFO - Deletou do dicionário a task de nome: UM TESTE
+2024-07-10 19:19:47,282 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:19:47,718 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:20:01,807 - logger - INFO - Criando nova task no dicionário: nova task
+2024-07-10 19:20:19,158 - logger - INFO - Editou uma task no dicionário. Nome: nova task > novo nome
+2024-07-10 19:20:19,257 - logger - INFO - Falhou ao tentar editar o nome de uma task no banco de dados. Erro: [!] Task with None not found.
+2024-07-10 19:20:22,368 - logger - INFO - Criou uma no banco de dados. Nome: novo nome
+2024-07-10 19:20:28,838 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:20:29,199 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:20:41,288 - logger - INFO - Editou uma task no dicionário. Nome: novo nome > novo novo nome
+2024-07-10 19:20:41,388 - logger - INFO - Falhou ao tentar editar o nome de uma task no banco de dados. Erro: [!] Task with None not found.
+2024-07-10 19:20:46,678 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:20:53,878 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:20:54,243 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:21:05,488 - logger - INFO - Editou uma task no dicionário. Nome: novo nome > novo novo nome
+2024-07-10 19:21:05,588 - logger - INFO - Falhou ao tentar editar o nome de uma task no banco de dados. Erro: [!] Task with None not found.
+2024-07-10 19:21:10,227 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:32:50,741 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:37:19,457 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:37:19,730 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:37:26,586 - logger - INFO - Editou uma task no dicionário. Nome: novo nome > novo novo nome
+2024-07-10 19:37:32,010 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:38:14,334 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:38:14,672 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:38:20,012 - logger - INFO - Editou uma task no dicionário. Nome: novo nome > novo novo nome
+2024-07-10 19:38:20,081 - logger - INFO - Editou uma task no banco de dados. Nome - novo nome > novo novo nome
+2024-07-10 19:38:23,642 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:38:29,212 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:38:29,463 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:38:38,685 - logger - INFO - Editou uma task no dicionário. Descrição - teste > nova descrição
+2024-07-10 19:38:38,809 - logger - INFO - Editou uma task no banco de dados. Descrição - teste > nova descrição
+2024-07-10 19:38:42,092 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:38:48,580 - logger - INFO - Deletou do banco de dados a task de ID: 72 - NOME: novo novo nome
+2024-07-10 19:38:48,722 - logger - INFO - Deletou do dicionário a task de nome: novo novo nome
+2024-07-10 19:38:58,507 - logger - INFO - Criando nova task no dicionário: nova task
+2024-07-10 19:39:04,415 - logger - INFO - Editou uma task no dicionário. Nome: nova task > novo nome
+2024-07-10 19:40:02,015 - logger - INFO - Criou uma no banco de dados. Nome: novo nome
+2024-07-10 19:40:03,707 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:40:04,012 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:40:09,670 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:40:11,686 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:40:13,487 - logger - INFO - Deletou do banco de dados a task de ID: 73 - NOME: novo nome
+2024-07-10 19:40:13,628 - logger - INFO - Deletou do dicionário a task de nome: novo nome
+2024-07-10 19:40:18,318 - logger - INFO - Criando nova task no dicionário: nova task
+2024-07-10 19:40:25,647 - logger - INFO - Editou uma task no dicionário. Nome: nova task > novo nome
+2024-07-10 19:40:38,002 - logger - INFO - Deletou do banco de dados a task de ID: 0 - NOME: novo nome
+2024-07-10 19:40:38,050 - logger - INFO - Deletou do dicionário a task de nome: novo nome
+2024-07-10 19:42:20,484 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:42:20,767 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:42:24,530 - logger - INFO - Criando nova task no dicionário: teste
+2024-07-10 19:42:46,089 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:42:46,381 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:52:29,664 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 19:52:29,667 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 19:52:42,702 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 19:52:42,834 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:06:53,224 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:06:53,494 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:07:04,385 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:07:04,540 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:07:12,141 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:07:23,977 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:07:24,381 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:07:26,398 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:07:26,541 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:08:15,645 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:08:15,954 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:08:17,806 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:08:17,941 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:08:59,937 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:09:00,327 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:09:03,737 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:09:03,875 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:09:17,739 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:09:19,030 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:09:22,281 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:09:22,431 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:11:41,407 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:11:41,785 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:11:44,294 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:11:44,426 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:11:51,233 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:11:52,569 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:12:16,728 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:12:17,048 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:12:19,496 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:12:19,637 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:12:37,266 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:12:37,598 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:12:39,744 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:12:39,885 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:14:25,308 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:14:25,609 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:14:27,299 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:14:27,629 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:14:38,953 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:14:39,288 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:15:03,213 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:15:03,576 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:15:13,071 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:17:11,812 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:17:12,153 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:17:14,181 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:17:14,531 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:19:57,316 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:19:57,651 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:19:59,585 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:19:59,949 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:20:04,549 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:20:41,007 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:20:41,681 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:20:44,365 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:20:44,724 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:21:00,538 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:21:00,897 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:21:03,384 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:21:03,752 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:21:07,669 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:21:13,749 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:21:14,098 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:21:16,219 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:21:16,586 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:23:06,718 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:23:08,102 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:23:49,800 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:23:50,185 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:23:56,018 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:24:02,406 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:24:02,688 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:24:17,066 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:24:17,439 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:24:53,369 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:24:53,614 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:24:55,812 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:24:56,145 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:28:33,129 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:28:33,417 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:28:35,560 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:28:35,907 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:28:39,567 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:28:55,207 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:28:55,411 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:28:58,551 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:28:58,897 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:29:25,240 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:29:25,676 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:29:27,369 - logger - INFO - Deletou do banco de dados a task de ID: 74 - NOME: teste
+2024-07-10 20:29:27,512 - logger - INFO - Deletou do dicionário a task de nome: teste
+2024-07-10 20:29:30,963 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:29:34,866 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:29:36,305 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:29:43,077 - logger - INFO - Criando nova task no dicionário: nova task
+2024-07-10 20:30:03,026 - logger - INFO - Deletou do banco de dados a task de ID: 75 - NOME: nova task
+2024-07-10 20:30:03,357 - logger - INFO - Deletou do dicionário a task de nome: nova task
+2024-07-10 20:30:06,248 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:30:11,073 - logger - INFO - Deletou do banco de dados a task de ID: 57 - NOME: Pallets Mix Josy - PRIME
+2024-07-10 20:30:11,207 - logger - INFO - Deletou do dicionário a task de nome: Pallets Mix Josy - PRIME
+2024-07-10 20:30:14,746 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:30:20,893 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:30:21,179 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:32:40,085 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:32:40,373 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:32:56,504 - logger - INFO - Deletou do banco de dados a task de ID: 75 - NOME: nova task
+2024-07-10 20:32:56,842 - logger - INFO - Deletou do dicionário a task de nome: nova task
+2024-07-10 20:33:03,653 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:33:20,836 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:33:21,088 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:35:06,487 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:35:06,786 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:35:09,679 - logger - INFO - Deletou do banco de dados a task de ID: 75 - NOME: nova task
+2024-07-10 20:35:10,009 - logger - INFO - Deletou do dicionário a task de nome: nova task
+2024-07-10 20:35:15,676 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:35:16,008 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:36:39,167 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:36:39,510 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:36:41,126 - logger - INFO - Deletou do banco de dados a task de ID: 75 - NOME: nova task
+2024-07-10 20:36:41,451 - logger - INFO - Deletou do dicionário a task de nome: nova task
+2024-07-10 20:36:45,715 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:36:46,036 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:37:53,771 - logger - INFO - Deletou do banco de dados a task de ID: 75 - NOME: nova task
+2024-07-10 20:37:54,152 - logger - INFO - Deletou do dicionário a task de nome: nova task
+2024-07-10 20:39:50,031 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:39:50,304 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:39:53,365 - logger - INFO - Deletou do banco de dados a task de ID: 75 - NOME: nova task
+2024-07-10 20:39:53,677 - logger - INFO - Deletou do dicionário a task de nome: nova task
+2024-07-10 20:39:57,202 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:39:57,500 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:40:14,954 - logger - INFO - Deletou do banco de dados a task de ID: 75 - NOME: nova task
+2024-07-10 20:40:15,273 - logger - INFO - Deletou do dicionário a task de nome: nova task
+2024-07-10 20:41:27,065 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:41:28,963 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:41:33,784 - logger - INFO - Deletou do banco de dados a task de ID: 75 - NOME: nova task
+2024-07-10 20:41:33,924 - logger - INFO - Deletou do dicionário a task de nome: nova task
+2024-07-10 20:43:43,713 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:43:43,981 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:43:49,698 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:43:51,034 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:44:08,293 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:44:08,627 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:44:12,767 - logger - INFO - Criando nova task no dicionário: nova
+2024-07-10 20:44:22,749 - logger - INFO - Deletou do banco de dados a task de ID: 76 - NOME: nova
+2024-07-10 20:44:23,074 - logger - INFO - Deletou do dicionário a task de nome: nova
+2024-07-10 20:44:31,219 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:44:49,673 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-10 20:44:49,997 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-10 20:45:24,011 - logger - INFO - Criando nova task no dicionário: Pallets MIX Josy - PRIME
+2024-07-10 20:45:39,237 - logger - INFO - Criou uma no banco de dados. Nome: Pallets MIX Josy - PRIME
+2024-07-10 20:45:39,988 - logger - DEBUG - Iniciando o gerenciador de tasks.

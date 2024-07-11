@@ -1,9 +1,10 @@
 from modules.updates_manager import UpdatesHandler
-from tasks_database.crud_database import create_task, create_update, delete_task, delete_update, get_all_updates, get_task_id, get_tasks_excluding_status, update_task
+from tasks_database.crud_database import create_task, create_update, delete_all_updates_from_task, delete_task, delete_update, get_all_updates, get_task_id, get_tasks_excluding_status, update_task
 from utils.colors import Colors
 from modules.tasks_storage import HandleTasks
 from typing import List, Optional, Union
 from logger import logger
+from psycopg2.errors import NotNullViolation
 
 class Todo(HandleTasks, UpdatesHandler):
     def __init__(self):
@@ -15,6 +16,21 @@ class Todo(HandleTasks, UpdatesHandler):
         tasks_ids = [task.task_id for task in self.tasks.values()]
         self.updates = get_all_updates(tasks_ids)
         self.__menu()
+    
+    def _get_task_db_id(self, task_id:int) -> int:
+        task_db_id = self.tasks[int(task_id)].task_id
+        if task_db_id == 0:
+            task_id = int(task_id)
+            task_name = self.tasks[task_id].name
+            task_desc = self.tasks[task_id].description
+            task_date = self.tasks[task_id].creation_date
+            task_status = self.tasks[task_id].status
+            create_task(task_name, task_desc, task_date, task_status)
+            task_id_in_db = get_task_id(task_name, task_desc)
+            self.tasks[task_id].task_id = task_id_in_db
+            return self.tasks[task_id].task_id
+        else:
+            return task_db_id
     
     def _show_tasks(self):
         """
@@ -81,6 +97,8 @@ class Todo(HandleTasks, UpdatesHandler):
         Método para deletar uma task tanto do banco de dados na Nuvem quanto no dicionário.
         """
         task_id = int(task_id)
+        task = self.tasks[int(task_id)]
+        task_db_id = task.task_id
         if task_id not in self.tasks.keys():
             print(f'{Colors.RED}[!]{Colors.RESET} ID não encontrado.')
             return
@@ -89,10 +107,8 @@ class Todo(HandleTasks, UpdatesHandler):
             # Caso o usuário não tenha informado o id na chamada da função.
             if task_id is None:
                 task_id = int(input('ID da Task a ser deletada> '))
-            task = self.tasks[int(task_id)]
             try:
                 # Pega o id da task no banco de dados se existir.
-                task_db_id = task.task_id
                 logger.info(f'Deletou do banco de dados a task de ID: {task_db_id} - NOME: {task.name}')
                 delete_task(task_db_id)
             except:...
@@ -116,8 +132,10 @@ class Todo(HandleTasks, UpdatesHandler):
             task_id: ID da task a ser atualizada.
             info: Informação a ser atualizada ('name' ou 'description').
         """
+        task_id = int(task_id)
+        task_db_id = self.tasks[task_id].task_id
         if info.lower() in ['name', 'nome']: 
-            old_name = self.tasks[int(task_id)].name
+            old_name = self.tasks[task_id].name
             new_name = input(f"Novo nome para a task {task_id}> ").strip()
 
             # Faz a alteração no dicionário.
@@ -126,13 +144,16 @@ class Todo(HandleTasks, UpdatesHandler):
 
             try:
                 # Pega o ID da task no banco de dados.
-                task_id_db = get_task_id(self.tasks[int(task_id)].name)
                 # Faz a alteração no banco de dados na nuvem.
-                update_task(name=new_name, task_id=task_id_db)
+                update_task(name=new_name, task_id=task_db_id)
                 logger.info(f"Editou uma task no banco de dados. Nome - {old_name} > {new_name}")
-            except Exception as e:
-                logger.info(f'Falhou ao tentar editar o nome de uma task no banco de dados. Erro: {e}')
 
+            # Provavelmente a task ainda não foi passada para o banco de dados portanto o ID não pode ser encontrado.
+            except ValueError:...
+            except Exception as e:
+                print(f'An error occurred while updating the task: {e}')
+
+            self.tasks.values()
             self._show_tasks()
 
         elif info.lower() in ['description', 'descrição', 'descricao', 'desc']:
@@ -141,7 +162,6 @@ class Todo(HandleTasks, UpdatesHandler):
                 "In Progress": Colors.YELLOW,
                 "Not Started": Colors.HARD_RED
             }
-            task_id = int(task_id)
             status = self.tasks[task_id].status
             color_code_status = colors_codes.get(status, "")
             print()
@@ -159,14 +179,11 @@ class Todo(HandleTasks, UpdatesHandler):
 
             #Faz a alteração no banco de dados na nuvem.
             try:
-                # Pega o ID da task no banco de dados.
-                task_id_db = get_task_id(self.tasks[task_id].name)
-                update_task(description=new_desc, task_id=task_id_db)
+                update_task(description=new_desc, task_id=task_db_id)
                 logger.info(f"Editou uma task no banco de dados. Descrição - {old_desc} > {new_desc}")
 
             except Exception as e:
                 logger.info(f'Falhou ao tentar editar a descrição de uma task no banco de dados. Erro: {e}')
-                print(e)
 
             self._show_task_info(task_id)
 
@@ -197,14 +214,14 @@ class Todo(HandleTasks, UpdatesHandler):
         print(f"\n{'-'*21} {Colors.YELLOW}Descrição {Colors.RESET}{'-'*21}\n\n", self.tasks[task_id].description, end='\n\n\n')
         task_id_in_db = self.tasks[task_id].task_id
 
-        # Verifica se essa task possui alguma atualização. Se sim, então irá printar a última atualização, logo depois da descrição.
+        # Verifica se essa task possui alguma atualização. Se sim, então irá printar todas as atualizações em ordem decrescente.
         if task_id_in_db in self.updates.keys():
             print(f"\n{'-'*20} {Colors.BLUE}Atualizações{Colors.RESET} {'-'*20}")
             for ids, update in reversed(self.updates[task_id_in_db].items()):
                 print(f"{Colors.BLUE}[+]{Colors.RESET} Número: {Colors.BLUE}{ids}{Colors.RESET}")
                 print(f"{Colors.BLUE}[+]{Colors.RESET} Data de criação: ", update.creation_date)
                 print(f"\n{update.description}")
-                print(f"\n+{'-'*25}+\n")
+                print(f"\n{'-'*25}+\n")
         print()
     
     def _save_changes_in_db(self):
@@ -244,16 +261,7 @@ class Todo(HandleTasks, UpdatesHandler):
             if not update: 
                 print(f'{Colors.RED}[!]{Colors.RESET} O texto não pode ser vazio!')
             else:
-                task_id_in_db = self.tasks[int(task_id)].task_id
-                if task_id_in_db == 0:
-                    task_id = int(task_id)
-                    task_name = self.tasks[task_id].name
-                    task_desc = self.tasks[task_id].description
-                    task_date = self.tasks[task_id].creation_date
-                    task_status = self.tasks[task_id].status
-                    create_task(task_name, task_desc, task_date, task_status)
-                    task_id_in_db = get_task_id(task_name, task_desc)
-                    self.tasks[task_id].task_id = task_id_in_db
+                task_id_in_db = self._get_task_db_id(int(task_id))
                 self.new_update(task_id_in_db, update)
                 self._show_tasks()
                 break
