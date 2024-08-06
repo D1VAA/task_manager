@@ -1,5 +1,5 @@
 from modules.updates_manager import UpdatesHandler
-from tasks_database.crud_database import create_task, create_update, delete_all_updates_from_task, delete_task, delete_update, get_all_updates, get_task_id, get_tasks_excluding_status, update_task
+from tasks_database.crud_database import create_task, create_update, delete_task, delete_update, get_all_updates, get_task_id, get_tasks_excluding_status, update_task
 from utils.colors import Colors
 from modules.tasks_storage import HandleTasks
 from typing import List, Optional, Union
@@ -47,15 +47,13 @@ class Todo(HandleTasks, UpdatesHandler):
             print()
             max_id_len = max([len(str(ids)) for ids in self.tasks.keys()])
             max_tasks_len = max([len(str(tasks.name)) for tasks in self.tasks.values()])
-            max_status_len = max([len(str(tasks.status)) for tasks in self.tasks.values()])
-
             colors_codes = {
                 "Done": Colors.GREEN,
                 "In Progress": Colors.YELLOW,
                 "Not Started": Colors.HARD_RED
             }
             
-            header = f'| {{:^{max_id_len+2}}} | {{:^{max_tasks_len}}} | {{:^{max_status_len}}} | {{:^7}}'
+            header = f'| {{:^{max_id_len+2}}} | {{:^{max_tasks_len}}} | {{:^11}} | {{:^7}}'
             print(header.format("IDs", "Tasks", "Status", "Updates"))
             print(header.format("---", "-----", "------", "-------"))
             print(header.format("", "", "", ""))
@@ -72,7 +70,7 @@ class Todo(HandleTasks, UpdatesHandler):
                                     updates_count)) 
             print()
 
-    def _create_task(self, name: Union[List, str]=None):
+    def _create_task(self, name: Union[List, str]=""):
         """
         Método para criar uma nova task. Não cria diretamente no banco de dados na Nuvem.
         """
@@ -92,21 +90,24 @@ class Todo(HandleTasks, UpdatesHandler):
                 self._show_tasks()
                 break
     
-    def _delete_task(self, task_id: Union[Optional[str], Optional[int]] = None) -> None:
+    def _delete_task(self, task_id: Union[Optional[str], Optional[int], None] = None) -> None:
         """
         Método para deletar uma task tanto do banco de dados na Nuvem quanto no dicionário.
         """
-        task_id = int(task_id)
+        # Caso o usuário não tenha informado o id na chamada da função.
+        if task_id is None:
+            task_id = int(input('ID da Task a ser deletada> '))
+
+        if isinstance(task_id, str):
+            task_id = int(task_id)
+
         task = self.tasks[int(task_id)]
         task_db_id = task.task_id
+
         if task_id not in self.tasks.keys():
             print(f'{Colors.RED}[!]{Colors.RESET} ID não encontrado.')
             return
-
         try:
-            # Caso o usuário não tenha informado o id na chamada da função.
-            if task_id is None:
-                task_id = int(input('ID da Task a ser deletada> '))
             try:
                 # Pega o id da task no banco de dados se existir.
                 logger.info(f'Deletou do banco de dados a task de ID: {task_db_id} - NOME: {task.name}')

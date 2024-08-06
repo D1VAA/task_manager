@@ -1,13 +1,17 @@
 from utils.colors import Colors
-from database.crud_database import create_freight, query_freight, get_unique_values
+from freight_database.crud_database import create_freight, query_freight, get_unique_values
 from pathlib import Path
 import send2trash
 from modules.todo import Todo
 
-def get_input(msg):
+def get_input(msg, allow_empty: bool=True):
     print()
-    obj = input(f'{Colors.PURPLE}[-]{Colors.RESET} {msg}').lower().rstrip()
-    return obj 
+    while True:
+        obj = input(f'{Colors.PURPLE}[-]{Colors.RESET} {msg}').lower().rstrip()
+        if allow_empty == False:
+            pass
+        else:
+            return obj 
 
 class Menu(Todo):
     def __init__(self):
@@ -25,7 +29,11 @@ class Menu(Todo):
         print(data)
     
     def menu(self):
-        opts = {1: self._add_freight, 2: self._query_freight, 3: self.show_options, 4: super().__init__}
+        opts = {1: self._add_freight, 
+                2: self._query_freight, 
+                3: self.show_options, 
+                4: super().__init__}
+
         while True:
             self._show_menu_options()
             try:
@@ -60,38 +68,36 @@ class Menu(Todo):
             file = file.resolve(strict=True)
         
         if file.exists():
-            link = create_gdrive_file(file_path, str(file))
+            link_to_download = create_gdrive_file(file_path, str(file))
 
         infos = {
             'origem': get_input('Origem: '),
             'destino': get_input('Destino: '),
             'client': get_input('Nome do cliente: '),
-            'link': link
         }
 
         create_freight(**infos)
         send2trash.send2trash(str(file))
 
         print(f'{Colors.GREEN}\n[+]{Colors.RESET} Created!\n')
-        print(f'{Colors.BLUE}[-]{Colors.RESET} Link to access:\n', link)
+        print(f'{Colors.BLUE}[-]{Colors.RESET} Link to access:\n', link_to_download)
         resp = input('Exit? [y/N]').lower()
         if resp == 'y':
             return
         else:
             self._add_freight()
 
-    def _query_freight(self) -> str:
+    def _query_freight(self):
         infos = {
             'origem': get_input('Origem: '),
             'destino': get_input('Destino: '),
             'client': get_input('Nome do cliente: ')
         } 
-        msg = query_freight(**infos) 
-        for cont, item in enumerate(msg):
-            for rota, link in item.items():
-                print(f'\n{"-"*10} {Colors.RED}{cont+1}º{Colors.RESET} {"-"*10} ', end='\n')
-                print(f'{Colors.YELLOW}{rota.title()}{Colors.RESET}',end='\n\n')
-                print(f'{Colors.BLUE}[+]{Colors.RESET} {link}', end='\n\n')
+        freightobj_list = query_freight(**infos) 
+        for cont, freight_obj in enumerate(freightobj_list):
+            print(f'\n{"-"*10} {Colors.RED}{cont+1}º{Colors.RESET} {"-"*10} ', end='\n')
+            print(f'{Colors.YELLOW}{freight_obj.origem.title()} x {freight_obj.destino.title()}{Colors.RESET}',end='\n\n')
+            print(f'{Colors.BLUE}[+]{Colors.RESET} {freight_obj.link}', end='\n\n')
 
     def show_options(self):
         or_col = get_unique_values("origem")
