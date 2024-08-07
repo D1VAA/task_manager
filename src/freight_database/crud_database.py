@@ -3,13 +3,12 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
+from .get_env import DATABASE_URL
 
 from freight_database.freight_obj import FreightOBJ
 from .models import Freight
 from typing import Dict, Any, Optional, List, Union
 
-load_dotenv(f'{os.getcwd()}/src/database/.env')
-DATABASE_URL = os.getenv('DATABASE_URL')
 if DATABASE_URL is None:
     raise ValueError('DATABASE_URL cannot be None.')
 

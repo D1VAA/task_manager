@@ -1,8 +1,7 @@
-from utils.colors import Colors
-from freight_database.crud_database import create_freight, query_freight, get_unique_values
 from pathlib import Path
 import send2trash
 from modules.todo import Todo
+from utils.imports import Colors, create_freight, query_freight, get_unique_values
 
 def get_input(msg, allow_empty: bool=True):
     print()

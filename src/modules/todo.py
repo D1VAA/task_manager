@@ -12,7 +12,7 @@ class Todo(HandleTasks, UpdatesHandler):
         logger.debug("Iniciando o gerenciador de tasks.")
         super().__init__()
         super().__init__()
-        self.tasks = get_tasks_excluding_status('Done') 
+        self.tasks = get_tasks_excluding_status('Done')
         tasks_ids = [task.task_id for task in self.tasks.values()]
         self.updates = get_all_updates(tasks_ids)
         self.__menu()

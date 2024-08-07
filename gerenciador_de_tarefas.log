@@ -914,3 +914,8 @@
 2024-07-10 20:45:24,011 - logger - INFO - Criando nova task no dicionário: Pallets MIX Josy - PRIME
 2024-07-10 20:45:39,237 - logger - INFO - Criou uma no banco de dados. Nome: Pallets MIX Josy - PRIME
 2024-07-10 20:45:39,988 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-22 13:41:25,910 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-22 15:41:23,337 - logger - DEBUG - Iniciando o gerenciador de tasks.
+2024-07-31 15:32:27,150 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-07-31 17:09:34,471 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
+2024-08-02 10:28:09,160 - logger - WARNING - Falha ao rotacionar logs. Arquivo provavelmente em uso.
