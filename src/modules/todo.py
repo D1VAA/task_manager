@@ -13,7 +13,7 @@ from psycopg2 import OperationalError
 from utils.colors import Colors
 from modules.tasks_storage import HandleTasks
 from typing import List, Optional, Union
-
+from textwrap import wrap
 
 class Todo(HandleTasks, UpdatesHandler):
     colors_codes = {
@@ -70,7 +70,11 @@ class Todo(HandleTasks, UpdatesHandler):
                                 for tasks in self.tasks.values()])
 
             header = (f"| {{:^{max_id_len+2}}} | "
+<<<<<<< HEAD
                 f"{{:^{max_tasks_len}}} | {{:^11}} | {{:^7}}")
+=======
+                     f"{{:^{max_tasks_len}}} | {{:^11}} | {{:^7}}")
+>>>>>>> b99a4a83966492a7a6563c85a71d4429a6caa495
             print(header.format("IDs", "Tasks", "Status", "Updates"))
             print(header.format("---", "-----", "------", "-------"))
             print(header.format("", "", "", ""))
@@ -249,7 +253,9 @@ class Todo(HandleTasks, UpdatesHandler):
                     f"{Colors.BLUE}[+]{Colors.RESET} Data de criação: ",
                     update.creation_date,
                 )
-                print(f"\n{update.description}")
+                print()
+                wrapped_string = wrap(update.description, 80)
+                print('\n'.join(wrapped_string))
                 print(f"\n{'-'*25}+\n")
         print()
 
@@ -350,13 +356,23 @@ class Todo(HandleTasks, UpdatesHandler):
             Usado para deletar um update de um task.
         - help
             Mostra esse menu.
+        - clear
+            Limpa o terminal
         """
         print(cmds_info)
 
     @staticmethod
     def _clear_terminal():
+<<<<<<< HEAD
         import os
         os.system('cls')
+=======
+        from os import system 
+        try:
+            system('cls') 
+        except:
+            system('clear')
+>>>>>>> b99a4a83966492a7a6563c85a71d4429a6caa495
 
     def __menu(self):
         # Chama o método para mostrar os comandos
@@ -373,7 +389,11 @@ class Todo(HandleTasks, UpdatesHandler):
             "update": self._add_update_to_task,
             "delete update": self._delete_update,
             "help": self._show_cmds,
+<<<<<<< HEAD
             "clear": self._clear_terminal
+=======
+            "clear": self._clear_terminal,
+>>>>>>> b99a4a83966492a7a6563c85a71d4429a6caa495
         }
         while True:
             try:
