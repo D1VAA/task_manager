@@ -135,7 +135,11 @@ def get_tasks_excluding_status(status):
         task_dict = {}
         for cont, task in enumerate(tasks):
             task_dict[cont + 1] = TaskObj(
-                task.name, task.description, task.creation_date, task.id, task.status
+                task.name, 
+                task.description, 
+                task.creation_date, 
+                task.id, 
+                task.status
             )
         task_dict_copy = task_dict.copy()
         return task_dict_copy
@@ -144,15 +148,21 @@ def get_tasks_excluding_status(status):
 def get_task_id(name, description=None):
     try:
         if description is not None:
-            return int(quick_query(Task, {"name": name, "description": description}).id)
-        return int(quick_query(Task, {"name": name}).id)
+            query = quick_query(Task, {"name": name, "description": description})
+            assert query is not None
+            return int(query.id)
+        query = quick_query(Task, {"name": name})
+        assert query is not None
+        return int(query.id)
     except:
         ...
 
 
 def get_update_id(description: str):
     try:
-        return int(quick_query(Task, {"description": description}).id)
+        query = quick_query(Task, {"description": description})
+        assert query is not None
+        return int(query.id)
     except:
         ...
 
@@ -170,6 +180,7 @@ def create_update(task_id: int, description: str, creation_date: str):
                 task_id=task_id, description=description, creation_date=creation_date
             )
             task_to_update = db.query(Task).filter(Task.id == task_id).first()
+            assert task_to_update is not None
             task_to_update.updates.append(new_update)
             db.commit()
 
@@ -210,7 +221,7 @@ def get_updates_by_task(task_id: int) -> Dict[int, Dict[int, Update]]:
         return updates_dict
 
 
-def get_all_updates(task_ids: List[int] = None) -> Dict[int, Dict[int, Update]]:
+def get_all_updates(task_ids: List[int] | None = None) -> Dict[int, Dict[int, Update]]:
     with get_db() as db:
         # Pega todos os updates na database
         if task_ids is None:

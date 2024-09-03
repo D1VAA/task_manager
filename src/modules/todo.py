@@ -34,6 +34,11 @@ class Todo(HandleTasks, UpdatesHandler):
         self.__menu()
 
     def _get_task_db_id(self, task_id: int) -> int:
+        """
+        Pega o ID da task Local e tenta descobrir o ID da task na Database.
+        Caso ela não tenha um, então cria a task na Database e retorna o ID gerado.
+        """
+
         task_db_id = self.tasks[int(task_id)].task_id
         if task_db_id == 0:
             task_id = int(task_id)
@@ -59,10 +64,8 @@ class Todo(HandleTasks, UpdatesHandler):
         if not len(self.tasks):
             print(f"{Colors.RED}[!]{Colors.RESET} Nenhuma task pendente.")
             print(
-                f"\n{Colors.BLUE}[+] {Colors.RESET}Para criar uma task digite:\
-                {
-                    Colors.BLUE}create{Colors.RESET}"
-            )
+                f"\n{Colors.BLUE}[+] {Colors.RESET}Para criar uma task digite:"
+                f"{Colors.BLUE}create{Colors.RESET}")
         else:
             print()
             max_id_len = max([len(str(ids)) for ids in self.tasks.keys()])
@@ -70,14 +73,10 @@ class Todo(HandleTasks, UpdatesHandler):
                                 for tasks in self.tasks.values()])
 
             header = (f"| {{:^{max_id_len+2}}} | "
-<<<<<<< HEAD
-                f"{{:^{max_tasks_len}}} | {{:^11}} | {{:^7}}")
-=======
-                     f"{{:^{max_tasks_len}}} | {{:^11}} | {{:^7}}")
->>>>>>> b99a4a83966492a7a6563c85a71d4429a6caa495
-            print(header.format("IDs", "Tasks", "Status", "Updates"))
-            print(header.format("---", "-----", "------", "-------"))
-            print(header.format("", "", "", ""))
+                     f"{{:^{max_tasks_len}}} | {{:^11}} | {{:^7}} | {{:^12}}")
+            print(header.format("IDs", "Tasks", "Status", "Updates", "Dependencies"))
+            print(header.format("---", "-----", "------", "-------", "------------"))
+            print(header.format("", "", "", "", ""))
             for task_id, task_obj in self.tasks.items():
                 color_code = self.colors_codes.get(task_obj.status, "")
                 task_id_in_db = task_obj.task_id
@@ -85,12 +84,14 @@ class Todo(HandleTasks, UpdatesHandler):
                     updates_count = 0
                 else:
                     updates_count = len(self.updates[task_id_in_db])
+                depends_count = len(task_obj.dependencies)
                 print(
                     header.format(
                         str(task_id),
                         task_obj.name,
                         f"{color_code}{task_obj.status}{Colors.RESET}",
                         updates_count,
+                        depends_count,
                     )
                 )
             print()
@@ -153,23 +154,6 @@ class Todo(HandleTasks, UpdatesHandler):
                     delete the task: {e}"
             )
 
-    def _task_header(self, task_id):
-        status = self.tasks[task_id].status
-        color_code_status = self.colors_codes.get(status, "")
-        print()
-        print(
-            f"{Colors.BLUE}[+]{Colors.RESET} Nome da Task: ",
-            self.tasks[task_id].name,
-        )
-        print(
-            f"{Colors.BLUE}[+]{Colors.RESET} Data de criação: ",
-            self.tasks[task_id]._creation_date,
-        )
-        print(
-            f"{Colors.BLUE}[+]{Colors.RESET} Status: {
-                color_code_status}{status}{Colors.RESET}"
-        )
-        print(f"\n{'-'*20} Descrição {'-'*20}\n")
 
     def _edit_task_info(self, task_id: int, info: str) -> str | None:
         """
@@ -223,7 +207,43 @@ class Todo(HandleTasks, UpdatesHandler):
 
             call_function[corresp_key]()
             self._show_task_info(task_id)
+            
+    def _task_header(self, task_id):
+        status = self.tasks[task_id].status
+        color_code_status = self.colors_codes.get(status, "")
+        print()
+        print(
+            f"{Colors.BLUE}[+]{Colors.RESET} Nome da Task: ",
+            self.tasks[task_id].name,
+        )
+        print(
+            f"{Colors.BLUE}[+]{Colors.RESET} Data de criação: ",
+            self.tasks[task_id]._creation_date,
+        )
+        print(
+            f"{Colors.BLUE}[+]{Colors.RESET} Status: {
+                color_code_status}{status}{Colors.RESET}"
+        )
+        print(f"\n{'-'*20} Descrição {'-'*20}\n")
 
+    def _handler_show_info(self, *opt):
+        if isinstance(opt[0], str) and opt[0] in ['depend', 'dependencie', 'd']:
+            self._show_task_relationship(int(opt[1]))
+        elif isinstance(opt[0], int) or opt[0].isdigit():
+            self._show_task_info(int(opt[0]))
+        else:
+            print(f"[!] Parâmetro Inválido: {opt[0]}")
+
+    def _show_task_relationship(self, task_id):
+        self._task_header(task_id)
+        print(self.tasks[int(task_id)].description, end='\n')
+        depend_task_ids: List = self.tasks[int(task_id)].dependencies
+        depend_task_names = [self.tasks[int(did)].name for did in depend_task_ids]
+        print(f'+ Dependencies...', end='\n')
+        for did, title in zip(depend_task_ids, depend_task_names):
+            print(f'{Colors.PURPLE}[+]{Colors.RESET} {did} {title}')
+        print()
+    
     def _show_task_info(self, task_id: int):
         """
         Método para mostrar as informações das tasks.
@@ -236,7 +256,8 @@ class Todo(HandleTasks, UpdatesHandler):
         task_id = int(task_id)
         task_id_in_db = self.tasks[task_id].task_id
         self._task_header(task_id)
-        print(self.tasks[task_id].description)
+        wrapped_string = wrap(self.tasks[task_id].description, 100)
+        print('\n'.join(wrapped_string))
 
         # Verifica se essa task possui alguma atualização.
         # Se sim, então irá printar todas as atualizações em ordem decrescente.
@@ -263,18 +284,17 @@ class Todo(HandleTasks, UpdatesHandler):
         """
         Método para salvar as alterações no banco de dados na Nuvem.
         """
-        for task in self.tasks.values():
+        for tid, task in self.tasks.items():
             # O código vai iterar por cada task no dicionário
             # e tentar criar ela dentro do banco de dados.
-            try:
-                create_task(
-                    task.name, task.description, task.creation_date, task.status
-                )
+            if task.task_id == 0:
+                self._get_task_db_id(tid)
 
+            else:
             # Caso a task já exista, irá apenas fazer update nas informações,
             # caso elas tenham sido alteradas.
-            except ValueError:
-                update_task(status=task.status, task_id=task.task_id)
+                update_task(status=task.status, 
+                            task_id=task.task_id)
 
         for task_id, updates in self.updates.items():
             for update in updates.values():
@@ -283,8 +303,8 @@ class Todo(HandleTasks, UpdatesHandler):
                                   update.creation_date)
                 except Exception as e:
                     raise Exception(
-                        "An error occurred saving changes \
-                    at the database... ",
+                        "An error occurred saving changes "
+                    "at the database... ",
                         e,
                     )
 
@@ -358,21 +378,29 @@ class Todo(HandleTasks, UpdatesHandler):
             Mostra esse menu.
         - clear
             Limpa o terminal
+        - depend
+            Cria uma depência entre duas tasks.
         """
         print(cmds_info)
 
     @staticmethod
     def _clear_terminal():
-<<<<<<< HEAD
-        import os
-        os.system('cls')
-=======
         from os import system 
         try:
             system('cls') 
         except:
             system('clear')
->>>>>>> b99a4a83966492a7a6563c85a71d4429a6caa495
+
+    def _add_dependencie(self, task_local_id, task_depend_id):
+        """
+        Método que vai ser chamado no menu para criar dependências entre duas tasks.
+
+        Args:
+            task_local_id (int): Recebe o ID da task que vai fazer um vínculo.
+            task_depend_id (int): Recebe o ID da task que vai ser vinculada a primeira.
+        """
+        self.create_dependencie(task_local_id, task_depend_id)
+        self._show_tasks()
 
     def __menu(self):
         # Chama o método para mostrar os comandos
@@ -385,15 +413,12 @@ class Todo(HandleTasks, UpdatesHandler):
             "delete": self._delete_task,
             "save": self._save_changes_in_db,
             "edit": self._edit_task_info,
-            "show": self._show_task_info,
+            "show": self._handler_show_info,
             "update": self._add_update_to_task,
             "delete update": self._delete_update,
             "help": self._show_cmds,
-<<<<<<< HEAD
-            "clear": self._clear_terminal
-=======
             "clear": self._clear_terminal,
->>>>>>> b99a4a83966492a7a6563c85a71d4429a6caa495
+            'depend': self._add_dependencie,
         }
         while True:
             try:
@@ -419,7 +444,7 @@ class Todo(HandleTasks, UpdatesHandler):
                 print(f"\n{Colors.RED}[+]{Colors.RESET} Leaving...")
                 break
             
-            except OperationalError as e:
+            except OperationalError:
                 print("[MENU] Erro de operação. Gentileza tentar o comando novamente.") 
             
             except Exception as e:

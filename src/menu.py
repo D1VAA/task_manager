@@ -151,6 +151,4 @@ class Menu:
                     f"\t{Colors.BLUE}[+]{Colors.RESET} {freight_obj.link}",
                     end="\n\n"
                 )
-
-
 Menu()
