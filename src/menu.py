@@ -37,21 +37,20 @@ class Menu:
     def __init__(self):
         self.menu()
 
+
     def _show_menu_options(self):
         data = f"""
         \r-------------------------------------------------------------
         \r\t{Colors.RED}[1] {Colors.YELLOW}Adicionar um novo frete.
         \r\t{Colors.RED}[2] {Colors.YELLOW}Consultar um frete da base.
-        \r\t{Colors.RED}[3] {Colors.YELLOW}Mostrar as opções.
           {Colors.RESET}
         """
         print(data)
-
+    
     def menu(self):
         opts = {
             1: self._add_freight,
             2: self._query_freight,
-            3: self.show_options,
         }
 
         while True:
@@ -83,7 +82,7 @@ class Menu:
                 print(e)
 
     def _add_freight_to_file(self, file: Path):
-        with open("to_register.txt", "a") as register_file:
+        with open("to_register.txt", "a", encoding='utf-8') as register_file:
             line_to_add = f"""+ Path: {file.as_posix()} - Name:{file.name}"""
             register_file.write(line_to_add)
 
@@ -103,6 +102,7 @@ class Menu:
                "origem": get_input("Origem: "),
                "destino": get_input("Destino: "),
                "client": get_input("Nome do cliente: "),
+               "link": link_to_download
             }
             create_freight(**infos)
 
@@ -140,18 +140,15 @@ class Menu:
             # Loop para printar todos os resultados
             for cont, freight_obj in enumerate(freightobj_list):
                 print(
-                    f'\n{"-"*10} {Colors.RED}{cont +
-                                              1}º{Colors.RESET} {"-"*10} ',
-                    end="\n",
-                )
+                    f'\n{"-"*10}{"-"*10} ', end="\n")
                 print(
                     f"{Colors.YELLOW}{freight_obj.origem.title()} "
                     f"x {freight_obj.destino.title()} - "
                     f"{freight_obj.client.title()}{Colors.RESET}",
-                    end="\n\n",
+                    end="\n",
                 )
                 print(
-                    f"{Colors.BLUE}[+]{Colors.RESET} {freight_obj.link}",
+                    f"\t{Colors.BLUE}[+]{Colors.RESET} {freight_obj.link}",
                     end="\n\n"
                 )
 

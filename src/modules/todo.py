@@ -9,6 +9,7 @@ from tasks_database.crud_database import (
     get_tasks_excluding_status,
     update_task,
 )
+from psycopg2 import OperationalError
 from utils.colors import Colors
 from modules.tasks_storage import HandleTasks
 from typing import List, Optional, Union
@@ -68,8 +69,8 @@ class Todo(HandleTasks, UpdatesHandler):
             max_tasks_len = max([len(str(tasks.name))
                                 for tasks in self.tasks.values()])
 
-            header = f"| {{:^{max_id_len+2}}} | \
-                {{:^{max_tasks_len}}} | {{:^11}} | {{:^7}}"
+            header = (f"| {{:^{max_id_len+2}}} | "
+                f"{{:^{max_tasks_len}}} | {{:^11}} | {{:^7}}")
             print(header.format("IDs", "Tasks", "Status", "Updates"))
             print(header.format("---", "-----", "------", "-------"))
             print(header.format("", "", "", ""))
@@ -352,6 +353,11 @@ class Todo(HandleTasks, UpdatesHandler):
         """
         print(cmds_info)
 
+    @staticmethod
+    def _clear_terminal():
+        import os
+        os.system('cls')
+
     def __menu(self):
         # Chama o método para mostrar os comandos
         self._show_cmds()
@@ -367,12 +373,12 @@ class Todo(HandleTasks, UpdatesHandler):
             "update": self._add_update_to_task,
             "delete update": self._delete_update,
             "help": self._show_cmds,
+            "clear": self._clear_terminal
         }
         while True:
             try:
                 cmd = input("Comando> ").lower().rstrip()
                 cmd_len = len(cmd.split())
-
                 if cmd.lower() in ["exit", "quit"]:
                     print(f"\n{Colors.RED}[+]{Colors.RESET} Leaving...")
                     self._save_changes_in_db()
@@ -392,6 +398,9 @@ class Todo(HandleTasks, UpdatesHandler):
                 self._save_changes_in_db()
                 print(f"\n{Colors.RED}[+]{Colors.RESET} Leaving...")
                 break
-
+            
+            except OperationalError as e:
+                print("[MENU] Erro de operação. Gentileza tentar o comando novamente.") 
+            
             except Exception as e:
                 print("[MENU] Erro: ", e)

@@ -17,8 +17,10 @@ if DATABASE_URL is None:
     raise ValueError("DATABASE_URL cannot be None.")
 
 try:
-    engine = create_engine(DATABASE_URL)  # type: ignore
-
+    engine = create_engine(DATABASE_URL)
+    LocalSession = sessionmaker(autocommit=False, 
+                                autoflush=False, 
+                                bind=engine)
 except Exception as e:
     raise ValueError(f"Failed to create engine: {e}")
 
@@ -148,7 +150,7 @@ def get_task_id(name, description=None):
         ...
 
 
-def get_update_id(description: str) -> int:
+def get_update_id(description: str):
     try:
         return int(quick_query(Task, {"description": description}).id)
     except:
