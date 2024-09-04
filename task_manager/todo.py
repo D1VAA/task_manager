@@ -1,5 +1,5 @@
-from modules.updates_manager import UpdatesHandler
-from tasks_database.crud_database import (
+from src.updates_manager import UpdatesHandler
+from src.tasks_database.crud_database import (
     create_task,
     create_update,
     delete_task,
@@ -10,8 +10,8 @@ from tasks_database.crud_database import (
     update_task,
 )
 from psycopg2 import OperationalError
-from utils.colors import Colors
-from modules.tasks_storage import HandleTasks
+from src.utils.colors import Colors
+from src.tasks_storage import HandleTasks
 from typing import List, Optional, Union
 from textwrap import wrap
 
@@ -449,3 +449,5 @@ class Todo(HandleTasks, UpdatesHandler):
             
             except Exception as e:
                 print("[MENU] Erro: ", e)
+
+Todo()
