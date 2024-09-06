@@ -269,12 +269,11 @@ class Todo(HandleTasks, UpdatesHandler):
                 print(
                     f"{Colors.BLUE}[+]{Colors.RESET} Número: {
                         Colors.BLUE}{ids}{Colors.RESET}"
-                )
+                , end=' | ')
                 print(
                     f"{Colors.BLUE}[+]{Colors.RESET} Data de criação: ",
                     update.creation_date,
                 )
-                print()
                 wrapped_string = wrap(update.description, 80)
                 print('\n'.join(wrapped_string))
                 print(f"\n{'-'*25}+\n")
