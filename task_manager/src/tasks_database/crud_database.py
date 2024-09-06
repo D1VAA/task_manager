@@ -5,21 +5,21 @@ import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
-from modules.tasks_storage import TaskObj
-from modules.updates_manager import Update
+from src.tasks_storage import TaskObj
+from src.updates_manager import Update
 from .models import Task, Updates
 from typing import Dict, Any, List, Optional
 from sqlalchemy.exc import IntegrityError
 
-load_dotenv(f"{os.getcwd()}/src/tasks_database/.env")
+load_dotenv(f"{os.getcwd()}/task_manager/src/tasks_database/.env")
 DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL is None:
     raise ValueError("DATABASE_URL cannot be None.")
 
 try:
     engine = create_engine(DATABASE_URL)
-    LocalSession = sessionmaker(autocommit=False, 
-                                autoflush=False, 
+    LocalSession = sessionmaker(autocommit=False,
+                                autoflush=False,
                                 bind=engine)
 except Exception as e:
     raise ValueError(f"Failed to create engine: {e}")
@@ -45,7 +45,10 @@ def quick_query(obj: Any, filter_dict: Dict[str, Any]):
         return query
 
 
-def create_task(name: str, description: Optional[str], creation_date: str, status: str):
+def create_task(name: str,
+                description: Optional[str],
+                creation_date: str,
+                status: str):
     with get_db() as db:
         if (
             quick_query(Task, {"name": name}) is not None
@@ -68,7 +71,6 @@ def create_task(name: str, description: Optional[str], creation_date: str, statu
 
 def delete_all_updates_from_task(task_id):
     with get_db() as db:
-        # updates_to_delete = db.query(Updates).filter(Updates.task_id == task_id)
         delete_stmt = delete(Updates).where(Updates.task_id == task_id)
         db.execute(delete_stmt)
         db.commit()

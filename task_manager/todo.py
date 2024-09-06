@@ -1,5 +1,5 @@
-from modules.updates_manager import UpdatesHandler
-from tasks_database.crud_database import (
+from src.updates_manager import UpdatesHandler
+from src.tasks_database.crud_database import (
     create_task,
     create_update,
     delete_task,
@@ -10,10 +10,12 @@ from tasks_database.crud_database import (
     update_task,
 )
 from psycopg2 import OperationalError
-from utils.colors import Colors
-from modules.tasks_storage import HandleTasks
+from src.utils.colors import Colors
+from src.tasks_storage import HandleTasks
 from typing import List, Optional, Union
 from textwrap import wrap
+
+from src.utils.manage_temp_depend_file import get_all_depends, save_depend_at_temp_file
 
 class Todo(HandleTasks, UpdatesHandler):
     colors_codes = {
@@ -31,6 +33,10 @@ class Todo(HandleTasks, UpdatesHandler):
         self.tasks = get_tasks_excluding_status("Done")
         tasks_ids = [task.task_id for task in self.tasks.values()]
         self.updates = get_all_updates(tasks_ids)
+        self.dependencies = get_all_depends()
+        for tid, depends in self.dependencies.items():
+            if int(tid) in self.tasks:
+                self.tasks[int(tid)].dependencies = depends
         self.__menu()
 
     def _get_task_db_id(self, task_id: int) -> int:
@@ -400,6 +406,10 @@ class Todo(HandleTasks, UpdatesHandler):
         """
         self.create_dependencie(task_local_id, task_depend_id)
         self._show_tasks()
+        depend_ids = self.tasks[int(task_local_id)].dependencies
+        print(depend_ids)
+        # Função para salvar num arquivo temporário as dependências.
+        save_depend_at_temp_file(task_local_id, depend_ids)
 
     def __menu(self):
         # Chama o método para mostrar os comandos
@@ -448,3 +458,5 @@ class Todo(HandleTasks, UpdatesHandler):
             
             except Exception as e:
                 print("[MENU] Erro: ", e)
+
+Todo()

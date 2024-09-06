@@ -6,6 +6,7 @@ from datetime import date
 class InvalidOperationError(Exception):
     pass
 
+
 @dataclass
 class TaskObj:
     """
@@ -21,11 +22,11 @@ class TaskObj:
     @property
     def creation_date(self):
         return self._creation_date
-    
+
     @property
     def status(self):
         return self._status
-    
+
     @creation_date.setter
     def creation_date(self, _):
         raise InvalidOperationError("Creation Date can't be changed.")
@@ -96,6 +97,6 @@ class HandleTasks:
 
     def update_status(self, task_id, new_status):
         self.tasks[int(task_id)].status = new_status
-    
+
     def create_dependencie(self, task_id, task_depend_id):
         self.tasks[int(task_id)].dependencies.append(task_depend_id)
