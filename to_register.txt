@@ -1,2 +1,14 @@
-+ Path: C:/Users/davip/�rea de Trabalho/Aracruz.ES x Tucum�n.AR- EVONIK.xls - Name:Aracruz.ES x Tucum�n.AR- EVONIK.xls
++ Path: C:/Users/davip/ rea de Trabalho/Aracruz.ES x Tucum n.AR- EVONIK.xls - Name:Aracruz.ES x Tucum n.AR- EVONIK.xls
 + Path: C:/Users/davip/Desktop/Santos x Nova Odessa.SP - Lamberti.xlsx - Name:Santos x Nova Odessa.SP - Lamberti.xlsx
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Aracruz.ES x Maipú.CL - EVONIK.xls - Name:Aracruz.ES x Maipú.CL - EVONIK.xls
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Buenos Aires.AR x Itajaí.SC (Dionísio) - AMERICAN TRANSPORT - Copia.xls - Name:Buenos Aires.AR x Itajaí.SC (Dionísio) - AMERICAN TRANSPORT - Copia.xls
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Buenos Aires.AR x Itajaí.SC (Dionísio) TRUCK - AMERICAN TRANSPORT.xls - Name:Buenos Aires.AR x Itajaí.SC (Dionísio) TRUCK - AMERICAN TRANSPORT.xls
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Ilhota x Apucarana - OPTA.xlsx - Name:Ilhota x Apucarana - OPTA.xlsx
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Ilhota x Guarulhos - CREMER.xlsx - Name:Ilhota x Guarulhos - CREMER.xlsx
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Ilhota x São Paulo - PRIME.xlsx - Name:Ilhota x São Paulo - PRIME.xlsx
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Ilhota x SP (3 Entregas) - PRIME.xlsx - Name:Ilhota x SP (3 Entregas) - PRIME.xlsx
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/ilhota x taquari.rs - princeton.xlsx - Name:ilhota x taquari.rs - princeton.xlsx
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Imbituba x Ilhota (Dev. NVG) - OPTA.xlsx - Name:Imbituba x Ilhota (Dev. NVG) - OPTA.xlsx
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Itapoá x Itajaí (DTA) - CREMER.xlsx - Name:Itapoá x Itajaí (DTA) - CREMER.xlsx
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Los Andres.CL x Ilhota.SC - PRIME.xls - Name:Los Andres.CL x Ilhota.SC - PRIME.xls
++ Path: C:/Users/davip/OneDrive/Área de Trabalho/Mendoza.AR  x Ilhota.SC - Via Uru.xlsx - Name:Mendoza.AR  x Ilhota.SC - Via Uru.xlsx

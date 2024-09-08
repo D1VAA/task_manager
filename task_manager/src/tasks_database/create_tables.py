@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, asc
 import os
 
 load_dotenv(f'{os.getcwd()}/src/tasks_database/.env')
-DATABASE_URL = os.getenv('TASKS_DATABASE_URL')
+DATABASE_URL = os.getenv('DATABASE_URL')
 if DATABASE_URL is None:
     raise ValueError('DATABASE_URL cannot be None.')
 

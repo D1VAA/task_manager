@@ -100,3 +100,6 @@ class HandleTasks:
 
     def create_dependencie(self, task_id, task_depend_id):
         self.tasks[int(task_id)].dependencies.append(task_depend_id)
+
+    def delete_dependencie(self, task_id, task_depend_id):
+        self.tasks[int(task_id)].dependencies.remove(task_depend_id)

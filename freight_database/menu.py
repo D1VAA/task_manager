@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 from utils.imports import (
     Colors,
     create_freight,
@@ -9,15 +8,17 @@ from utils.imports import (
 )
 import customtkinter as ctk
 from customtkinter import filedialog
+from send2trash import send2trash
 
 
 def open_file_dialog() -> tuple[str, ...]:
+    global root;
     root = ctk.CTk()
     root.withdraw()
 
     file_path = filedialog.askopenfilenames(
         title="Selecione um arquivo",
-        filetypes=[("Todos os arquivos", "*"), ("Excel", "*.xlsx")],
+        filetypes=[("Todos os arquivos", "*"), ("Excel", "*.xlsx"), "Excel", "*.xls"],
     )
     assert isinstance(file_path, tuple)
     return file_path
@@ -36,7 +37,6 @@ def get_input(msg, allow_empty: bool = True):
 class Menu:
     def __init__(self):
         self.menu()
-
 
     def _show_menu_options(self):
         data = f"""
@@ -70,6 +70,7 @@ class Menu:
 
             except KeyboardInterrupt:
                 print(f"\n\n{Colors.RED}[+]{Colors.RESET} Leaving...")
+                root.destroy()
                 break
 
             except ValueError:
@@ -83,7 +84,7 @@ class Menu:
 
     def _add_freight_to_file(self, file: Path):
         with open("to_register.txt", "a", encoding='utf-8') as register_file:
-            line_to_add = f"""+ Path: {file.as_posix()} - Name:{file.name}"""
+            line_to_add = f"""+ Name:{file.name}\n"""
             register_file.write(line_to_add)
 
     def _add_freight(self):
@@ -111,6 +112,7 @@ class Menu:
                 f"{Colors.BLUE}[-]{Colors.RESET} Link to access:\n",
                 link_to_download
             )
+            send2trash(path)
             answer = input(
                 "Já foi preenchido na planilha de prospecções?[S/N] "
                 )

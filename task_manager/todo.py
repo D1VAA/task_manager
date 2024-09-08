@@ -232,6 +232,15 @@ class Todo(HandleTasks, UpdatesHandler):
         )
         print(f"\n{'-'*20} Descrição {'-'*20}\n")
 
+    def _handler_delete_info(self, *opt):
+        if opt[0] in ['depend', 'd', 'dependencie']:
+            self._del_dependencie(task_local_id=opt[1],
+                                  task_depend_id=opt[2])
+        elif opt[0] in ['update']:
+            self.delete_update()
+        elif opt[0].isdigit() or isinstance(opt[0], int):
+            self.delete_task(opt[0])
+    
     def _handler_show_info(self, *opt):
         if isinstance(opt[0], str) and opt[0] in ['depend', 'dependencie', 'd']:
             self._show_task_relationship(int(opt[1]))
@@ -364,8 +373,8 @@ class Todo(HandleTasks, UpdatesHandler):
             O parâmetro name (opcional) deve ser uma string de apenas uma palavra.
         - show tasks (no args)
             Usado para mostrar as Tasks ainda pendentes.
-        - delete (task_id)
-            Usado para deletar uma task. Recebe o ID da task.
+        - delete (*)
+            Usado para deletar uma task. Pode receber as opções 'd', 'update' or the task ID.
         - save (no args)
             Usado para salvar as alterações realizadas.
         - edit (opt)
@@ -377,8 +386,6 @@ class Todo(HandleTasks, UpdatesHandler):
         - update (task_id)
             Usado para adicionar uma atualização a uma task.
             Recebe o ID de uma task como parâmetro.
-        - delete update (no args)
-            Usado para deletar um update de um task.
         - help
             Mostra esse menu.
         - clear
@@ -395,6 +402,13 @@ class Todo(HandleTasks, UpdatesHandler):
             system('cls') 
         except:
             system('clear')
+    
+    def _del_dependencie(self, task_local_id, task_depend_id):
+        self.delete_dependencie(task_local_id, task_depend_id)
+        self._show_tasks()
+        depend_ids = self.tasks[int(task_local_id)].dependencies
+        # Função para salvar num arquivo temporário as dependências.
+        save_depend_at_temp_file(task_local_id, depend_ids)
 
     def _add_dependencie(self, task_local_id, task_depend_id):
         """
@@ -407,7 +421,6 @@ class Todo(HandleTasks, UpdatesHandler):
         self.create_dependencie(task_local_id, task_depend_id)
         self._show_tasks()
         depend_ids = self.tasks[int(task_local_id)].dependencies
-        print(depend_ids)
         # Função para salvar num arquivo temporário as dependências.
         save_depend_at_temp_file(task_local_id, depend_ids)
 
@@ -419,12 +432,11 @@ class Todo(HandleTasks, UpdatesHandler):
         available_cmds = {
             "create": self._create_task,
             "show tasks": self._show_tasks,
-            "delete": self._delete_task,
+            "delete": self._handler_delete_info,
             "save": self._save_changes_in_db,
             "edit": self._edit_task_info,
             "show": self._handler_show_info,
             "update": self._add_update_to_task,
-            "delete update": self._delete_update,
             "help": self._show_cmds,
             "clear": self._clear_terminal,
             'depend': self._add_dependencie,

@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from typing import Any, Dict, List, Optional, Union
 
-from freight_database.freight_obj import FreightOBJ
+from database.freight_obj import FreightOBJ
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
