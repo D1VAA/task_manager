@@ -277,3 +277,5 @@ def edit_update(description=None, task_id=None, update_id=None):
                 db.rollback()
         else:
             print(f"[!] Task with {task_id} not found.")
+        
+

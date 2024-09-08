@@ -1,11 +1,10 @@
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, Integer, column
-from typing import Optional
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, backref
+from sqlalchemy import ForeignKey, Table, Column
+from typing import List, Optional
 
 
 class Base(DeclarativeBase):
     ...
-
 
 class Task(Base):
     __tablename__ = 'tasks'
@@ -14,16 +13,20 @@ class Task(Base):
     description: Mapped[str] = mapped_column(nullable=True)
     creation_date: Mapped[str] = mapped_column(nullable=False)
     status: Mapped[str] = mapped_column(nullable=False)
-    updates = relationship("Updates", backref='task')
-    # Coluna para referência da outra tarefa.
-    dependency_id: Mapped[Optional[int]] = mapped_column(Integer,
-                                                         ForeignKey("tasks.id"),
-                                                         nullable=True)
-    #
-    dependency: Mapped[Optional["Task"]] = relationship("Task",
-                                                        remote_side=[id],
-                                                        backref="dependent_tasks")
+    updates: Mapped[List["Updates"]] = relationship("Updates", backref='task')
+    dependencies: Mapped[List["Task"]] = relationship(
+        secondary='task_dependencies',
+        primaryjoin=id == 'task_dependencies.task_id',
+        secondaryjoin=id == 'task_dependencies.dependency_id',
+        backref=backref('dependent_tasks', lazy='dinamic')
+    )
 
+task_dependencies = Table(
+    "task_dependencies",
+    Base.metadata,
+    Column('task_id', ForeignKey('tasks.id'), primary_key=True),
+    Column('dependency_id', ForeignKey('tasks.id'), primary_key=True),
+)
 
 class Updates(Base):
     __tablename__ = 'updates'
