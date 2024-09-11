@@ -85,6 +85,21 @@ class HandleTasks:
             new_tasks[task_id + 1] = task  # Placeholder for deleted tasks
         self._tasks = new_tasks
 
+    def get_specific_db_id(self, local_id):
+        return self.tasks[int(local_id)].task_id
+    
+    def get_specific_local_id(self, db_id):
+        db_id = int(db_id)
+        for local_id, task in self.tasks.items():
+            if task.task_id == db_id:
+                return local_id
+
+    def get_all_tasks_db_ids(self) -> Dict[int, TaskObj]:
+        return {task.task_id: task for task in self.tasks.values()}
+    
+    def get_all_tasks_local_ids(self) -> Dict[int, TaskObj]:
+        return {tid: task for tid, task in self.tasks.items()}
+
     def delete_task(self, task_id: Union[str, int]) -> None:
         del self.tasks[int(task_id)]
         self._reorganize_tasks()

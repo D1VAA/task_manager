@@ -12,10 +12,8 @@ from src.tasks_database.crud_database import (
 from psycopg2 import OperationalError
 from src.utils.colors import Colors
 from src.tasks_storage import HandleTasks
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
 from textwrap import wrap
-
-from src.utils.manage_temp_depend_file import get_all_depends, save_depend_at_temp_file
 
 class Todo(HandleTasks, UpdatesHandler):
     colors_codes = {
@@ -31,12 +29,8 @@ class Todo(HandleTasks, UpdatesHandler):
         # Pega todas as tasks que não possuírem o status como "Done"
         # no banco de dados da Nuvem
         self.tasks = get_tasks_excluding_status("Done")
-        tasks_ids = [task.task_id for task in self.tasks.values()]
-        self.updates = get_all_updates(tasks_ids)
-        self.dependencies = get_all_depends()
-        for tid, depends in self.dependencies.items():
-            if int(tid) in self.tasks:
-                self.tasks[int(tid)].dependencies = depends
+        self.updates = get_all_updates([tid for tid in 
+                                        self.get_all_tasks_db_ids()])
         self.__menu()
 
     def _get_task_db_id(self, task_id: int) -> int:
@@ -234,10 +228,9 @@ class Todo(HandleTasks, UpdatesHandler):
 
     def _handler_delete_info(self, *opt):
         if opt[0] in ['depend', 'd', 'dependencie']:
-            self._del_dependencie(task_local_id=opt[1],
-                                  task_depend_id=opt[2])
+            self._del_dependencie()
         elif opt[0] in ['update']:
-            self.delete_update()
+            self._delete_update()
         elif opt[0].isdigit() or isinstance(opt[0], int):
             self.delete_task(opt[0])
     
@@ -403,26 +396,24 @@ class Todo(HandleTasks, UpdatesHandler):
         except:
             system('clear')
     
-    def _del_dependencie(self, task_local_id, task_depend_id):
+    def _del_dependencie(self):
+        task_local_id = input('Main task ID: ')
+        task_depend_id = input('Dependent task ID: ')
         self.delete_dependencie(task_local_id, task_depend_id)
         self._show_tasks()
-        depend_ids = self.tasks[int(task_local_id)].dependencies
-        # Função para salvar num arquivo temporário as dependências.
-        save_depend_at_temp_file(task_local_id, depend_ids)
 
-    def _add_dependencie(self, task_local_id, task_depend_id):
+    def _add_dependencie(self, task_local_id, task_depend_local_id):
         """
         Método que vai ser chamado no menu para criar dependências entre duas tasks.
-
+        As dependências no arquivo são salvas considerando o ID da task na database.
+        
         Args:
             task_local_id (int): Recebe o ID da task que vai fazer um vínculo.
             task_depend_id (int): Recebe o ID da task que vai ser vinculada a primeira.
         """
-        self.create_dependencie(task_local_id, task_depend_id)
-        self._show_tasks()
-        depend_ids = self.tasks[int(task_local_id)].dependencies
-        # Função para salvar num arquivo temporário as dependências.
-        save_depend_at_temp_file(task_local_id, depend_ids)
+        main_t_obj = self.tasks[task_local_id]
+        dependent_t_obj = self.tasks[task_depend_local_id]
+
 
     def __menu(self):
         # Chama o método para mostrar os comandos
