@@ -1,4 +1,4 @@
-from src.updates_manager import UpdatesHandler
+from model.updates_strcuture import UpdatesHandler
 from src.tasks_database.crud_database import (
     create_task,
     create_update,
@@ -11,11 +11,11 @@ from src.tasks_database.crud_database import (
 )
 from psycopg2 import OperationalError
 from src.utils.colors import Colors
-from src.tasks_storage import HandleTasks
+from model.tasks_structure import TasksHandler
 from typing import List, Optional, Union, Dict
 from textwrap import wrap
 
-class Todo(HandleTasks, UpdatesHandler):
+class Todo(TasksHandler, UpdatesHandler):
     colors_codes = {
         "Done": Colors.GREEN,
         "In Progress": Colors.YELLOW,

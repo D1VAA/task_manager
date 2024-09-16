@@ -5,8 +5,8 @@ import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
-from src.tasks_storage import TaskObj
-from src.updates_manager import Update
+from model.tasks_structure import TaskObj
+from model.updates_strcuture import Update
 from .models import Task, Updates
 from typing import Dict, Any, List, Optional
 from sqlalchemy.exc import IntegrityError
@@ -91,7 +91,7 @@ def delete_task(task_id):
 
                 except Exception as e:
                     db.rollback()
-                    print(e)
+                    print("[!] Error while deleting task from database: ",e)
 
 
 def update_task(name=None, description=None, status=None, task_id=None):
