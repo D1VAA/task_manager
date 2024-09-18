@@ -1,7 +1,7 @@
-from utils.imports import Dict, List
+from src.utils.imports import Dict, List
 from dataclasses import dataclass, field
-from model.tasks_structure import TaskObj
-from utils.manage_temp_depend_file import get_all_depends, save_depend_at_temp_file
+from src.model.tasks_structure import TaskObj
+from src.utils.manage_temp_depend_file import get_all_depends, save_depend_at_temp_file
 
 @dataclass
 class Depends:
@@ -17,7 +17,7 @@ class Depends:
     dependent_task: TaskObj
 
     _id_counter: int = 0
-    _existing_dependencies: set = set()
+    _existing_dependencies: set = field(default_factory=set)
 
     def __post_init__(self):
         if (self.main_task.task_id, self.dependent_task.task_id) in Depends._existing_dependencies:

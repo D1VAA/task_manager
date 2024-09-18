@@ -16,9 +16,9 @@ class Task(Base):
     updates: Mapped[List["Updates"]] = relationship("Updates", backref='task')
     dependencies: Mapped[List["Task"]] = relationship(
         secondary='task_dependencies',
-        primaryjoin=id == 'task_dependencies.task_id',
-        secondaryjoin=id == 'task_dependencies.dependency_id',
-        backref=backref('dependent_tasks', lazy='dinamic')
+        primaryjoin='Task.id == task_dependencies.c.task_id',
+        secondaryjoin='Task.id == task_dependencies.c.dependency_id',
+        backref=backref('dependent_tasks', lazy='dynamic')
     )
 
 task_dependencies = Table(

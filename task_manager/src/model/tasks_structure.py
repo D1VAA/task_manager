@@ -1,8 +1,5 @@
-from typing import Dict, Optional, Union
+from typing import Optional
 from dataclasses import dataclass, field
-from datetime import date
-from model.updates_strcuture import Update
-from tasks import tasks
 
 
 class InvalidOperationError(Exception):

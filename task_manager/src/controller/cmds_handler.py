@@ -1,9 +1,10 @@
-from tasks_handler import TasksHandler
-from model.updates_strcuture import Update
-from utils.colors import Colors
-from tasks_database import crud_database as task_db_h
+from .tasks_handler import TasksHandler
+from src.model.updates_strcuture import Update
+from src.utils.colors import Colors
+from src.tasks_database import crud_database as task_db_h
 from textwrap import wrap
-from typing import Dict, List, Any
+from src.utils.imports import Dict
+from src.model.tasks import Tasks
 
 th = TasksHandler()
 colors_codes = {
@@ -100,12 +101,15 @@ class ShowInfo:
         print(f"\n{'-'*20} Descrição {'-'*20}\n")
 
     @staticmethod
-    def _show_all_tasks(tasks):
+    def _show_all_tasks():
+        tasks = Tasks()
+        print("...............")
+        print(tasks.get_tasks())
         if not len(th.tasks):
             print(f"{Colors.RED}[!]{Colors.RESET} Nenhuma task pendente.")
             print(
                 f"\n{Colors.BLUE}[+] {Colors.RESET}Para criar uma task digite:"
-                f"{Colors.BLUE}create{Colors.RESET}")
+                f"{Colors.BLUE}create{Colors.RESET}", end='\n')
         else:
             print()
             max_id_len = max([len(str(ids)) for ids in tasks.keys()])
@@ -180,7 +184,7 @@ class ShowInfo:
             task_obj = tasks[int(opt[0])]
             cls._show_specific_task_info(task_obj)
         else:
-            cls._show_all_tasks(tasks)
+            cls._show_all_tasks()
 
 class SaveChanges:
     @classmethod

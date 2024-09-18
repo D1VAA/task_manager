@@ -1,23 +1,25 @@
-from model.tasks import tasks
+from src.model.tasks import Tasks
 from typing import Dict, Optional, Union
 from datetime import date
 
-from model.tasks_structure import TaskObj
-from model.updates_strcuture import Update
+from src.model.tasks_structure import TaskObj
+from src.model.updates_strcuture import Update
+from src.model.tasks import Tasks
 
-class TasksHandler:
+class TasksHandler(Tasks):
     """
-    Class to manage tasks.
+    Class to manage tasks objects.
     """
     def __init__(self):
-        self.tasks = tasks
+        super().__init__()
+        print(self.tasks)
         self.id_counter = 0
-        if tasks != {}:
-            self.id_counter = max(tasks.keys())
+        if self.tasks != {}:
+            self.id_counter = max(self.tasks.keys())
 
     def __next_id(self) -> int:
         """Generate the next unique ID."""
-        return len(tasks.keys()) + 1
+        return len(self.tasks.keys()) + 1
 
     def new_task(self, name: str, description: Optional[str]) -> None:
         """
@@ -40,42 +42,42 @@ class TasksHandler:
         self._tasks = new_tasks
 
     def get_specific_db_id(self, local_id):
-        return tasks[int(local_id)].task_id
+        return self.tasks[int(local_id)].task_id
     
     def get_specific_local_id(self, db_id):
         db_id = int(db_id)
-        for local_id, task in tasks.items():
+        for local_id, task in self.tasks.items():
             if task.task_id == db_id:
                 return local_id
 
     def get_all_tasks_db_ids(self) -> Dict[int, TaskObj]:
-        return {task.task_id: task for task in tasks.values()}
+        return {task.task_id: task for task in self.tasks.values()}
     
     def get_all_tasks_local_ids(self) -> Dict[int, TaskObj]:
-        return {tid: task for tid, task in tasks.items()}
+        return {tid: task for tid, task in self.tasks.items()}
 
     def delete_task(self, task_id: Union[str, int]) -> None:
-        del tasks[int(task_id)]
+        del self.tasks[int(task_id)]
         self._reorganize_tasks()
 
     def change_name(self, task_id, new_name):
-        tasks[int(task_id)].name = new_name
+        self.tasks[int(task_id)].name = new_name
 
     def change_description(self, task_id, new_desc):
-        tasks[int(task_id)].description = new_desc
+        self.tasks[int(task_id)].description = new_desc
 
     def update_status(self, task_id, new_status):
-        tasks[int(task_id)].status = new_status
+        self.tasks[int(task_id)].status = new_status
 
     def create_dependencie(self, task_id, task_depend_id):
-        tasks[int(task_id)].dependencies.append(task_depend_id)
+        self.tasks[int(task_id)].dependencies.append(task_depend_id)
 
     def delete_dependencie(self, task_id, task_depend_id):
-        tasks[int(task_id)].dependencies.remove(task_depend_id)
+        self.tasks[int(task_id)].dependencies.remove(task_depend_id)
 
     def create_update(self, task_id, description):
-        new_id = len(tasks[int(task_id)].updates.keys())+1
-        tasks[int(task_id)].updates[new_id] = Update(description)
+        new_id = len(self.tasks[int(task_id)].updates.keys())+1
+        self.tasks[int(task_id)].updates[new_id] = Update(description)
 
     def delete_update(self, task_id, update_id):
-        tasks[int(task_id)].updates.pop(update_id)
+        self.tasks[int(task_id)].updates.pop(update_id)

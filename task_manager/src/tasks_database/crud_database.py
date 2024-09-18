@@ -5,8 +5,8 @@ import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from contextlib import contextmanager
 
-from model.tasks_structure import TaskObj
-from model.updates_strcuture import Update
+from src.model.tasks_structure import TaskObj
+from src.model.updates_strcuture import Update
 from .models import Task, Updates
 from typing import Dict, Any, List, Optional
 from sqlalchemy.exc import IntegrityError
