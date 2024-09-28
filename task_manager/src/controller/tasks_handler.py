@@ -1,18 +1,20 @@
-from src.model.tasks import Tasks
+from src.model.tasks import TasksDict
 from typing import Dict, Optional, Union
 from datetime import date
 
 from src.model.tasks_structure import TaskObj
 from src.model.updates_strcuture import Update
-from src.model.tasks import Tasks
+from src.model.tasks import TasksDict
+from src.model.metaclass import Singleton
 
-class TasksHandler(Tasks):
+class TasksHandler(metaclass=Singleton):
     """
     Class to manage tasks objects.
     """
+    _deleted_tasks = []
     def __init__(self):
-        super().__init__()
-        print(self.tasks)
+        ts = TasksDict()
+        self.tasks = ts.tasks
         self.id_counter = 0
         if self.tasks != {}:
             self.id_counter = max(self.tasks.keys())
@@ -21,6 +23,12 @@ class TasksHandler(Tasks):
         """Generate the next unique ID."""
         return len(self.tasks.keys()) + 1
 
+    def get_update_obj(self, task_id, update_id):
+        return self.tasks[task_id].updates[update_id]
+    
+    def get_dependencie_obj(self, task_id, dependent_task_id):
+        return self.tasks[task_id].dependencies[dependent_task_id]
+    
     def new_task(self, name: str, description: Optional[str]) -> None:
         """
         Create a new task.
@@ -29,17 +37,17 @@ class TasksHandler(Tasks):
         self.id_counter: int = self.__next_id()
         creation_date = date.today().strftime("%d-%m-%Y")  # Format: dd-mm-yyyy
 
-        self._tasks[self.id_counter] = TaskObj(
+        self.tasks[self.id_counter] = TaskObj(
             name, description, creation_date)
-
+    
     def _reorganize_tasks(self):
         """
         Reorganize the tasks dictionary to fill gaps in ID sequence.
         """
         new_tasks = {}
-        for task_id, task in enumerate(self._tasks.values()):
+        for task_id, task in enumerate(self.tasks.values()):
             new_tasks[task_id + 1] = task  # Placeholder for deleted tasks
-        self._tasks = new_tasks
+        self.tasks = new_tasks
 
     def get_specific_db_id(self, local_id):
         return self.tasks[int(local_id)].task_id
@@ -57,6 +65,9 @@ class TasksHandler(Tasks):
         return {tid: task for tid, task in self.tasks.items()}
 
     def delete_task(self, task_id: Union[str, int]) -> None:
+        try:
+            self._deleted_tasks.append(self.tasks[int(task_id)].task_id)
+        except:...
         del self.tasks[int(task_id)]
         self._reorganize_tasks()
 
@@ -70,10 +81,15 @@ class TasksHandler(Tasks):
         self.tasks[int(task_id)].status = new_status
 
     def create_dependencie(self, task_id, task_depend_id):
-        self.tasks[int(task_id)].dependencies.append(task_depend_id)
+        main_obj = self.tasks[int(task_id)]
+        depend_obj = self.tasks[int(task_depend_id)]
+        self.tasks[int(task_id)].dependencies[task_depend_id] = depend_obj
+        self.tasks[int(task_depend_id)].depend_to.append(main_obj)
 
     def delete_dependencie(self, task_id, task_depend_id):
-        self.tasks[int(task_id)].dependencies.remove(task_depend_id)
+        main_obj = self.tasks[task_id]
+        self.tasks[int(task_id)].dependencies.pop(task_depend_id)
+        #self.tasks[int(task_depend_id)].depend_to.remove(main_obj)
 
     def create_update(self, task_id, description):
         new_id = len(self.tasks[int(task_id)].updates.keys())+1

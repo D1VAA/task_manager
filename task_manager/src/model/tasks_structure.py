@@ -17,6 +17,8 @@ class TaskObj:
     task_id: int = 0
     _status: str = "Not Started"
     updates: dict = field(default_factory=dict)
+    dependencies: dict = field(default_factory=dict)
+    depend_to: list = field(default_factory=list)
 
     @property
     def creation_date(self):

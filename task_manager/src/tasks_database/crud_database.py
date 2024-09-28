@@ -56,15 +56,16 @@ def create_task(name: str,
         ):
             raise ValueError("Task already exists.")
         try:
-            new_freight = Task(
+            new_task = Task(
                 name=name,
                 description=description,
                 creation_date=creation_date,
                 status=status,
             )
-            db.add(new_freight)
+            db.add(new_task)
             db.commit()
-            return {"message": "Task created succesfully."}
+            return {"message": "Task created succesfully.", 
+                    'task_id': new_task.id}
         except Exception as e:
             print(e)
 
@@ -94,29 +95,41 @@ def delete_task(task_id):
                     print("[!] Error while deleting task from database: ",e)
 
 
-def update_task(name=None, description=None, status=None, task_id=None):
+def update_task(name=None, 
+                description=None, 
+                status=None, 
+                updates=None, 
+                dependencies=None, 
+                task_id=None):
     with get_db() as db:
         if name is None and task_id is None:
-            print("[!] A name or a task_id must be informed.")
+            print("[!] A name or a task ID must be informed.")
 
         if task_id is not None:
             task = db.get(Task, task_id)
+
         else:
             task = db.query(Task).filter_by(name=name).first()
+
         if task is not None:
             try:
-                if (
-                    task.name == name
-                    and task.description == description
-                    and task.status == status
-                ):
-                    return None
+                # if (task.name == name and task.description == description and task.status == status, task.updates == updates, task.dependencies == dependencies): return None
                 if name is not None:
                     task.name = name
                 if description is not None:
                     task.description = description
                 if status is not None:
                     task.status = status
+                if updates is not None:
+                    for desc, cd in updates.items():
+                        create_update(task_id=task.id,
+                                      description=desc,
+                                      creation_date=cd)
+                if dependencies is not None:
+                    for did in dependencies:
+                        create_dependencie(main_t_id=task.id, 
+                                           dependent_t_id=did)
+
                 db.commit()
             except sqlalchemy.exc.IntegrityError as e:
                 db.rollback()
@@ -136,12 +149,16 @@ def get_tasks_excluding_status(status):
         )
         task_dict = {}
         for cont, task in enumerate(tasks):
+            updates = {c:up for c, up in enumerate(task.updates)}
+            dependencies = {tasks.index(d)+1:d for d in task.dependencies}
             task_dict[cont + 1] = TaskObj(
                 task.name, 
                 task.description, 
                 task.creation_date, 
                 task.id, 
-                task.status
+                task.status,
+                updates,
+                dependencies
             )
         task_dict_copy = task_dict.copy()
         return task_dict_copy
@@ -216,8 +233,8 @@ def get_updates_by_task(task_id: int) -> Dict[int, Dict[int, Update]]:
         updates_dict = {}
         if task_id not in updates_dict.keys():
             updates_dict[task_id] = {}
-        for cont, update in enumerate(updates):
-            updates_dict[task_id][cont + 1] = Update(
+        for update in updates:
+            updates_dict[update.id] = Update(
                 update.description, update.creation_date, update.id
             )
         return updates_dict
@@ -278,4 +295,26 @@ def edit_update(description=None, task_id=None, update_id=None):
         else:
             print(f"[!] Task with {task_id} not found.")
         
+def create_dependencie(main_t_id: int, dependent_t_id: int):
+    with get_db() as db:
+        try:
+            main_task = db.get(Task, main_t_id)
+            dependent_task = db.get(Task, dependent_t_id)
+            assert main_task is not None and dependent_task is not None
+            main_task.dependencies.append(dependent_task)
+            db.commit()
 
+        except:
+            db.rollback()
+
+def delete_dependencie(main_t_id: int, dependent_t_id: int):
+    with get_db() as db:
+        try:
+            main_task = db.get(Task, main_t_id)
+            dependent_task = db.get(Task, dependent_t_id)
+            assert main_task is not None and dependent_task is not None
+            main_task.dependencies.remove(dependent_task)
+            db.commit()
+
+        except:
+            db.rollback()

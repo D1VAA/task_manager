@@ -1,6 +1,6 @@
-from src.controller.input_handler import InputHandler
 from src.controller.initializer import initializer
+result = initializer()
 
-initializer()
+from src.controller.input_handler import InputHandler
 menu = InputHandler()
 menu.cmd_input()

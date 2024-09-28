@@ -3,9 +3,13 @@ from .cmds_handler import *
 
 available_cmds = {
     'create': CreateTask.execute,
-    'delete': DeleteTask.execute,
+    'delete': Delete.execute,
     'show': ShowInfo.execute,
     'save': SaveChanges.execute,
+    'edit': EditTask.execute,
+    'update': AddUpdate.execute,
+    'depend': AddDependencie.execute,
+    'clear': ClearScreen.execute,
 }
 
 class InputHandler:
@@ -17,21 +21,23 @@ class InputHandler:
                 cmd_len = len(cmd.split())
                 if cmd.lower() in ["exit", "quit"]:
                     print(f"\n{Colors.RED}[+]{Colors.RESET} Leaving...")
-                    #self._save_changes_in_db()
+                    SaveChanges.execute()
                     break
                 if cmd in available_cmds.keys():
                     available_cmds[cmd]()
                 elif cmd_len >= 2:
                     cmd, *opt = cmd.split()
 
-                    if cmd.isdigit():...
-                        #self._manage_task_by_id(cmd, *opt)
+                    if cmd.isdigit():
+                        ChangeTaskStatus.execute(cmd, *opt)
 
-                    else:...
-                        #available_cmds[cmd](*opt)
+                    else:
+                        available_cmds[cmd](*opt)
 
             except KeyboardInterrupt:
-                #self._save_changes_in_db()
+                try:
+                    SaveChanges.execute()
+                except:...
                 print(f"\n{Colors.RED}[+]{Colors.RESET} Leaving...")
                 break
             
