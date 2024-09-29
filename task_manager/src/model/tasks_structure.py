@@ -14,7 +14,7 @@ class TaskObj:
     name: str
     description: Optional[str]
     _creation_date: str  # Immutabel attribute
-    task_id: int = 0
+    id: int = 0  # database id
     _status: str = "Not Started"
     updates: dict = field(default_factory=dict)
     dependencies: dict = field(default_factory=dict)

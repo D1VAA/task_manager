@@ -12,6 +12,7 @@ available_cmds = {
     'clear': ClearScreen.execute,
 }
 
+
 class InputHandler:
     def cmd_input(self):
         ShowInfo._show_all_tasks()        

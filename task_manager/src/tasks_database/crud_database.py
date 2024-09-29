@@ -149,13 +149,13 @@ def get_tasks_excluding_status(status):
         )
         task_dict = {}
         for cont, task in enumerate(tasks):
-            updates = {c:up for c, up in enumerate(task.updates)}
-            dependencies = {tasks.index(d)+1:d for d in task.dependencies}
+            updates = {c: up for c, up in enumerate(task.updates)}
+            dependencies = {tasks.index(d)+1: d for d in task.dependencies}
             task_dict[cont + 1] = TaskObj(
-                task.name, 
-                task.description, 
-                task.creation_date, 
-                task.id, 
+                task.name,
+                task.description,
+                task.creation_date,
+                task.id,
                 task.status,
                 updates,
                 dependencies
