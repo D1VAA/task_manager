@@ -149,7 +149,7 @@ def get_tasks_excluding_status(status):
         )
         task_dict = {}
         for cont, task in enumerate(tasks):
-            updates = {c: up for c, up in enumerate(task.updates)}
+            updates = {c+1: up for c, up in enumerate(task.updates)}
             dependencies = {tasks.index(d)+1: d for d in task.dependencies}
             task_dict[cont + 1] = TaskObj(
                 task.name,
@@ -179,9 +179,9 @@ def get_task_id(name, description=None):
 
 def get_update_id(description: str):
     try:
-        query = quick_query(Task, {"description": description})
-        assert query is not None
-        return int(query.id)
+        query = quick_query(Updates, {"description": description})
+        if query is not None:
+            return int(query.id)
     except:
         ...
 
@@ -210,8 +210,7 @@ def create_update(task_id: int, description: str, creation_date: str):
 def delete_update(update_id: int) -> None:
     with get_db() as db:
         try:
-            update_to_delete = db.query(Updates).filter(
-                Updates.id == update_id).first()
+            update_to_delete = db.query(Updates).filter_by(id=update_id).first()
             if update_to_delete is None:
                 raise ValueError(f"Update with ID: {update_id} not found.")
             db.delete(update_to_delete)

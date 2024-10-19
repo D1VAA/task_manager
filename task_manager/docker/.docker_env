@@ -1,2 +1,0 @@
-DATABASE_URL=postgresql://myuser:12345@postgres:5432/mydata
-DATABASE_CREATE_URL=postgresql://myuser:12345@localhost:5432/mydata

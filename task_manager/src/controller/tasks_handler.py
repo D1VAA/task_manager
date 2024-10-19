@@ -50,6 +50,11 @@ class TasksHandler(metaclass=Singleton):
             new_tasks[task_id + 1] = task  # Placeholder for deleted tasks
         self.tasks = new_tasks
 
+    def get_specific_local_id(self, db_id):
+        for task_id, tobj in self.tasks.items():
+            if tobj.id == db_id:
+                return task_id
+
     def get_specific_db_id(self, local_id):
         return self.tasks[int(local_id)].id
 
@@ -69,10 +74,9 @@ class TasksHandler(metaclass=Singleton):
 
     def update_status(self, task_id, new_status) -> str | None:
         if new_status == "done":
-            depends = self.tasks[int(task_id)].dependencies.values()
-            if any(x.status.lower() != "done" for x in depends):
-                return f"Operação não realizada. A task {task_id} possui dependências não finalizadas.\n"
-
+            depends = self.tasks[int(task_id)].dependencies.keys()
+            if any(self.tasks[int(did)].status.lower() != "done" for did in depends):
+                return f" Não foi possível concluir a task {task_id} pois ela possui dependências não finalizadas.\n"
         self.tasks[int(task_id)].status = new_status
 
     def create_dependencie(self, task_id, task_depend_id):

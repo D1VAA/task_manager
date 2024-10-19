@@ -1,5 +1,7 @@
 from psycopg2 import OperationalError
 from .cmds_handler import *
+from prompt_toolkit import PromptSession
+from prompt_toolkit.history import InMemoryHistory
 
 available_cmds = {
     'create': CreateTask.execute,
@@ -15,10 +17,12 @@ available_cmds = {
 
 class InputHandler:
     def cmd_input(self):
+        history = InMemoryHistory()
+        s = PromptSession(history=history)
         ShowInfo._show_all_tasks()        
         while True:
             try:
-                cmd = input("Comando> ").lower().rstrip()
+                cmd = s.prompt("Comando> ").lower().rstrip()
                 cmd_len = len(cmd.split())
                 if cmd.lower() in ["exit", "quit"]:
                     print(f"\n{Colors.RED}[+]{Colors.RESET} Leaving...")

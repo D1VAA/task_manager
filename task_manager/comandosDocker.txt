@@ -1,4 +1,0 @@
-docker compose up
-Abrir outro terminal
-docker ps
-docker exec -it <id do container task> sh

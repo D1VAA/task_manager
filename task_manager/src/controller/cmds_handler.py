@@ -6,6 +6,8 @@ from textwrap import wrap
 from src.utils.imports import Dict
 from os import system
 import platform
+from prompt_toolkit import PromptSession
+from prompt_toolkit.history import InMemoryHistory
 
 colors_codes = {
     "Done": Colors.GREEN,
@@ -14,11 +16,13 @@ colors_codes = {
 }
 
 th = TasksHandler()
+history = InMemoryHistory()
+s = PromptSession(history=history)
 
 
 def get_input(msg, empty=False):
     while True:
-        user_input = input(f"{Colors.RED}[+]{Colors.RESET} {msg}> ").rstrip()
+        user_input = s.prompt(f"{msg}> ").rstrip()
         if user_input == "" and empty:
             return ""
         else:
@@ -68,7 +72,7 @@ class Delete:
         cls, task_id: int | str | None = None, update_id: int | str | None = None
     ):
         if task_id is None:
-            task_id = int(input("ID da Task> "))
+            task_id = int(s.prompt("ID da Task> "))
         elif isinstance(task_id, str) and task_id.isdigit():
             task_id = int(task_id)
 
@@ -78,7 +82,7 @@ class Delete:
             return
 
         if update_id is None:
-            update_id = int(input("ID do Update a ser deletado> "))
+            update_id = int(s.prompt("ID do Update a ser deletado> "))
         elif isinstance(update_id, str) and update_id.isdigit():
             update_id = int(update_id)
 
@@ -89,18 +93,18 @@ class Delete:
         update_obj = th.get_update_obj(task_id, update_id)
         # Tenta deletar o update na database, caso ele exista.
         try:
-            update_id = task_db_h.get_update_id(update_obj.description)
-            assert update_id is not None
-            task_db_h.delete_update(update_id)
-        except:
-            ...
+            update_id_db = task_db_h.get_update_id(update_obj.description)
+            if update_id_db is not None:
+                task_db_h.delete_update(update_id_db)
+        except:...
+
         th.delete_update(task_id, update_id)
         ShowInfo._show_all_tasks()
 
     @classmethod
     def _del_dependencie(cls):
-        task_id = int(input("Main task ID: "))
-        dependent_task_id = int(input("Dependent task ID: "))
+        task_id = int(s.prompt("Main task ID: "))
+        dependent_task_id = int(s.prompt("Dependent task ID: "))
         th.delete_dependencie(task_id, dependent_task_id)
         try:
             main_obj = th.tasks[task_id]
@@ -157,7 +161,7 @@ class EditTask:
         try:
             ShowInfo._task_header(th.tasks[task_id])
             print(f"{Colors.RED}Escreva...{Colors.RESET}")
-            new_desc = input("""\r""")
+            new_desc = s.prompt("""\r""")
             th.change_description(task_id, new_desc)
             task_db_id = th.get_specific_db_id(task_id)
             task_db_h.update_task(description=new_desc, task_id=task_db_id)
@@ -217,7 +221,7 @@ class ShowInfo:
                     header.format(
                         str(task_l_id),
                         task_obj.name,
-                        f"{color_code}{task_obj.status}{Colors.RESET}",
+                        f"{color_code}{task_obj.status:^11}{Colors.RESET}",
                         updates_count,
                         depends_count,
                     )
@@ -337,7 +341,7 @@ class AddUpdate:
     @classmethod
     def execute(cls, task_id):
         while True:
-            update = input("Escreva> ")
+            update = s.prompt("Escreva> ")
             if not update:
                 print(f"{Colors.RED}[!]{
                     Colors.RESET} O texto não pode ser vazio!")
@@ -353,11 +357,11 @@ class AddDependencie:
         cls, task_id: str | int | None = None, t_depend_id: str | int | None = None
     ):
         if task_id is None:
-            task_id = int(input("ID da Task que vai receber a dependência > "))
+            task_id = int(s.prompt("ID da Task que vai receber a dependência > "))
         elif isinstance(task_id, str) and task_id.isdigit():
             task_id = int(task_id)
         if t_depend_id is None:
-            t_depend_id = int(input("ID da task dependente > "))
+            t_depend_id = int(s.prompt("ID da task dependente > "))
         elif isinstance(t_depend_id, str) and t_depend_id.isdigit():
             t_depend_id = int(t_depend_id)
 
