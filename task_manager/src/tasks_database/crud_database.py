@@ -50,10 +50,7 @@ def create_task(name: str,
                 creation_date: str,
                 status: str):
     with get_db() as db:
-        if (
-            quick_query(Task, {"name": name}) is not None
-            or quick_query(Task, {"description": description}) is not None
-        ):
+        if (quick_query(Task, {"name": name}) is not None):
             raise ValueError("Task already exists.")
         try:
             new_task = Task(

@@ -62,7 +62,7 @@ class Delete:
         try:
             th.delete_task(t_local_id)
             task_db_id = th.get_specific_db_id(t_local_id)
-            task_db_h.delete_task(task_db_id)
+            #task_db_h.delete_task(task_db_id)
             print("\n+ Task deletada!\n")
         except:
             pass
